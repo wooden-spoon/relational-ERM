@@ -69,8 +69,8 @@ setup(
     packages=find_packages(),
     ext_modules=extensions_tensorflow,
     cmdclass={'build_ext': BuildExtCustom},
-    author={'nips_anon'},
-    author_email={'nips_anon@nodomain.edu'},
+    author='Wenda Zhou and Victor Veitch',
+    author_email='wz2335@columbia.edu',
     install_requires=[
         'numpy>=1.13'
     ],
