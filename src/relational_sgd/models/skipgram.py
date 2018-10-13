@@ -12,7 +12,7 @@ def make_skipgram():
     A model function for skipgram edge prediction (with a nonsense vertex classifier attached for testing convenience)
     """
 
-    def make_label_logits(embeddings, mode, params):
+    def make_label_logits(embeddings, features, mode, params):
         return tf.zeros([tf.shape(embeddings)[0], params['n_labels']])
 
     def make_no_label_loss(logits, labelled_verts, present_labels, split):
@@ -22,26 +22,6 @@ def make_skipgram():
                                 make_edge_logits=_make_edge_list_logits,
                                 make_label_pred_loss=make_no_label_loss,
                                 make_edge_pred_loss=make_simple_skipgram_loss(None))
-
-
-def make_alt_skipgram():
-    """ Uses the skipgram objective for relational data with a homebrew windowing strategy
-
-    Returns
-    -------
-    A model function for skipgram edge prediction (with a nonsense vertex classifier attached for testing convenience)
-    """
-
-    def make_label_logits(embeddings, mode, params):
-        return tf.zeros([tf.shape(embeddings)[0], params['n_labels']])
-
-    def make_no_label_loss(logits, labelled_verts, present_labels, split):
-        return tf.constant(0, dtype=tf.float32)
-
-    return make_node_classifier(make_label_logits=make_label_logits,
-                                make_edge_logits=_make_edge_list_logits,
-                                make_label_pred_loss=make_no_label_loss,
-                                make_edge_pred_loss=_make_alt_skipgram_edge_loss)
 
 
 def make_multilabel_logistic_regression(label_task_weight=0.5, regularization=0., clip=None, **kwargs):
@@ -60,7 +40,7 @@ def make_multilabel_logistic_regression(label_task_weight=0.5, regularization=0.
     A model function for simple multilabel logistic regression.
     """
 
-    def make_label_logits(embeddings, mode, params):
+    def make_label_logits(embeddings, features, mode, params):
         # actually computes 0.5 * \sum w^2, so it should just reproduce sklearn
         regularizer = tf.contrib.layers.l2_regularizer(scale=label_task_weight * regularization)
 
@@ -91,7 +71,7 @@ def make_multilabel_deep_logistic_regression():
     a function be passed to model_fn
     """
 
-    def make_label_logits(embeddings, mode, params):
+    def make_label_logits(embeddings, features, mode, params):
         for units in params['hidden_units']:
             net = tf.layers.dense(embeddings, units=units, activation=tf.nn.relu)
 
@@ -101,6 +81,48 @@ def make_multilabel_deep_logistic_regression():
                                 make_edge_logits=_make_edge_list_logits,
                                 make_label_pred_loss=_make_label_sigmoid_cross_entropy_loss,
                                 make_edge_pred_loss=make_simple_skipgram_loss(12))
+
+
+def make_multilabel_prediction_with_features(label_task_weight=0.5, regularization=0., clip=None, **kwargs):
+    """ Uses the skipgram objective for relational data, and predicts labels with logistic regression
+    using the skipgram embeddings as the features.
+
+    Parameters
+    ----------
+    label_task_weight: the weight for the label task (between 0 and 1). By default, the label and edge
+        task are weighted equally.
+    clip: if not None, the value to clip the edge loss at.
+    kwargs: additional arguments are forwarded to the `make_node_classifier` template.
+
+    Returns
+    -------
+    A model function for simple multilabel logistic regression.
+    """
+
+    def make_label_logits(embeddings, features, mode, params):
+        # actually computes 0.5 * \sum w^2, so it should just reproduce sklearn
+        regularizer = tf.contrib.layers.l2_regularizer(scale=label_task_weight * regularization)
+
+        layer = tf.layers.dense(
+            embeddings, params['n_labels'], activation=None, use_bias=True,
+            kernel_regularizer=regularizer,
+            bias_regularizer=regularizer,
+            name='logits_labels')
+
+        return layer
+
+    edge_task_weight = 1 - label_task_weight
+
+    return make_node_classifier(
+        make_label_logits=make_label_logits,
+        make_edge_logits=_make_edge_list_logits,
+        make_label_pred_loss=make_weighted_loss(_make_label_sigmoid_cross_entropy_loss, label_task_weight),
+        make_edge_pred_loss=make_weighted_loss(make_simple_skipgram_loss(clip), edge_task_weight),
+        **kwargs)
+
+#
+# helper functions follow
+#
 
 
 def _make_label_sigmoid_cross_entropy_loss(logits, labelled_verts, present_labels, split):
@@ -156,12 +178,13 @@ def make_weighted_loss(loss_fn, weight=1.0):
     return fn
 
 
-def _make_edge_list_logits(embeddings, edge_list, weights, params):
+def _make_edge_list_logits(embeddings, features, edge_list, weights, params):
     """ Helper function to create the skipgram loss for edge structure
 
     Parameters
     ----------
     embeddings: the embeddings features for the current subgraph.
+    features: features from tensorflow dataset (not used)
     edge_list: edge list of the subgraph
     weights: weights of the edges in the subgraph
     params: other parameters
@@ -239,91 +262,3 @@ def make_simple_skipgram_loss(clip=None):
         return loss_value
 
     return loss
-
-
-def _make_alt_skipgram_edge_loss(embeddings, n_vert, edge_list, edge_weights, params):
-    """ Helper function to create the skipgram loss for edge structure using an alternative
-    windowing strategy
-
-    Parameters
-    ----------
-    embeddings: the embeddings features for the current subgraph.
-    n_vert: the number of vertices
-    edge_list: edge list of the subgraph
-    edge_weights: weights of the edges in the subgraph
-    params: other parameters
-
-    Returns
-    -------
-    a tensor representing the edge prediction loss.
-    """
-    # relational structure
-    window = params['window']
-
-    # data augmentation of positive examples
-    pos_ind, loss_reweighting_pos = _get_window_alt(n_vert, edge_list, edge_weights, window)
-    pos_ex = tf.ones_like(loss_reweighting_pos, dtype=tf.float32)
-
-    # negative examples
-    negative_ind_in_el = tf.squeeze(tf.where(tf.equal(edge_weights, 0)))
-    negative_inds = tf.gather(edge_list, negative_ind_in_el)
-    loss_reweighting_neg = tf.ones(tf.shape(negative_inds)[0], dtype=tf.float32)
-    neg_ex = tf.zeros_like(loss_reweighting_neg, dtype=tf.float32)
-
-    # put it together
-    indices = tf.concat([pos_ind, negative_inds], axis=0)
-    loss_reweighting = tf.concat([loss_reweighting_pos, loss_reweighting_neg], axis=0)
-    examples = tf.concat([pos_ex, neg_ex], axis=0)
-
-    # embedding inner products
-    pairwise_inner_prods = tf.matmul(embeddings, embeddings, transpose_b=True)
-    relevant_inner_prods = tf.gather_nd(pairwise_inner_prods, indices)
-
-    edge_pred_loss = tf.losses.sigmoid_cross_entropy(examples, relevant_inner_prods,
-                                                     weights=loss_reweighting,
-                                                     reduction=tf.losses.Reduction.NONE)
-
-    # hack to deal with the case of mislabeled edges (due to naive negative sampling)
-    edge_pred_loss_clipped = tf.reduce_mean(
-        tf.where(edge_pred_loss < 12, edge_pred_loss, tf.zeros_like(edge_pred_loss)))
-
-    return edge_pred_loss_clipped
-
-
-def _get_window_alt(n_vert, edge_list, weights, window):
-    """
-    Returns a tensor of shape [?, 2], where (i,j) is included if
-    there is a path between i and j of length < window
-    and a tensor of shape (?) of weights indicating how important each pair is
-    (weighting[i,j] = \sum_w exp(-w) * [# paths of length w between i and j]
-
-    Basic idea: non-zero entries of adjacency_matrix^l are pairs connected by some path of length l
-
-
-    Parameters
-    ----------
-    n_vert : int, number of vertices
-    edge_list: tensor, [?, 2]
-    weights: tensor, [?], tf.float32
-    window: int, skipgram window size
-
-    Returns
-    -------
-
-    """
-
-    edge_present = tf.cast(tf.not_equal(weights, 0), tf.float32)
-    adj_mat = edge_list_to_adj_mat(n_vert, edge_list, edge_present, force_simple=True)
-
-    pow = adj_mat
-    run = adj_mat
-    for w in range(window - 1):
-        pow = tf.matmul(pow, adj_mat, a_is_sparse=True, b_is_sparse=True)
-        run = run + (pow / np.exp(w))
-
-    run = tf.matrix_band_part(run, 0, -1)  # restrict to upper triangular to eliminate redundancies
-    ret_indices = tf.where(run > 0)
-    ret_weightings = tf.gather_nd(run, ret_indices)
-    ret_indices = tf.cast(ret_indices, edge_list.dtype)
-
-    return ret_indices, ret_weightings
