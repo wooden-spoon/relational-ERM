@@ -22,9 +22,9 @@ For the homosapiens protein-protein dataset (included):
 
 1. Node classification---embeddings for two-stage training: 
 
-python -m scripts.run_skipgram_simple --label-task-weight 1e-30 --sampler <sampler> 
+python -m scripts.run_skipgram_simple --label-task-weight 1e-30 --sampler \<sampler\> 
 
-where <sampler> is any of 
+where \<sampler\> is any of 
     'biased-walk': skipgram random-walk with unigram negative sampling,
     'p-sampling': p-sampling with unigram negative sampling,
     'uniform-edge': uniform edge sampling with unigram negative sampling,
@@ -39,7 +39,7 @@ Sampler hyperparameters for other samplers are set so that the expected number o
 
 2. Node classification---simultaneous training:
 
-python -m scripts.run_skipgram_simple --max-steps 120000 --label-task-weight 0.001 --global_learning_rate 10. --sampler <sampler> --exotic-evaluation
+python -m scripts.run_skipgram_simple --max-steps 120000 --label-task-weight 0.001 --global_learning_rate 10. --sampler \<sampler\> --exotic-evaluation
 
 Remarks: the --exotic-evaluation flag causes scoring to be done averaged over all choices of samplers. Output values are most easily read in tensorboard.
 Internally, the predictor uses an exponentially weighted moving average for label prediction (i.e., Polyak averaging) 
