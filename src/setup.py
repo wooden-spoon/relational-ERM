@@ -22,7 +22,7 @@ class TensorflowExtension(Extension):
 
         if os.name == 'nt':
             _append_to_key(kwargs, 'library_dirs', [os.path.join(tf.sysconfig.get_lib(), 'python')])
-            _append_to_key(kwargs, 'libraries', ['pywrap_tensorflow_internal'])
+            _append_to_key(kwargs, 'libraries', ['_pywrap_tensorflow_internal'])
             _append_to_key(kwargs, 'extra_compile_args',
                            ['/DCOMPILER_MSVC', '/DNOMINMAX', '/DWIN32_LEAN_AND_MEAN', '/DVC_EXTRALEAN',
                             '/wd4267', '/wd4244', '/permissive-'])
@@ -66,11 +66,11 @@ extensions_tensorflow = [
 setup(
     name='relational_sgd',
     version='0.1.0',
+    author='Victor Veitch and Wenda Zhou',
+    author_email='wz2335@columbia.edu',
     packages=find_packages(),
     ext_modules=extensions_tensorflow,
     cmdclass={'build_ext': BuildExtCustom},
-    author='Wenda Zhou and Victor Veitch',
-    author_email='wz2335@columbia.edu',
     install_requires=[
         'numpy>=1.13'
     ],

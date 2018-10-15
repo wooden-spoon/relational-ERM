@@ -38,17 +38,17 @@ public:
 private:
     TF_DISALLOW_COPY_AND_ASSIGN(RandomWalkDatasetOp);
 
-    class Dataset: public GraphDatasetBase {
+    class Dataset: public DatasetBase {
     public:
         explicit Dataset(OpKernelContext* ctx, int32 walk_length, int64 seed, int64 seed2,
                          Tensor neighbours, Tensor lengths, Tensor offsets)
-            : GraphDatasetBase(ctx), neighbours_(std::move(neighbours)), lengths_(std::move(lengths)),
+            : DatasetBase(DatasetContext(ctx)), neighbours_(std::move(neighbours)), lengths_(std::move(lengths)),
                 offsets_(std::move(offsets)), shapes_({{walk_length}}), walk_length_(walk_length),
                 seed_(seed), seed2_(seed2)
             {}
 
 
-        std::unique_ptr<IteratorBase> MakeIterator(const string& prefix) const override {
+        std::unique_ptr<IteratorBase> MakeIteratorInternal(const string& prefix) const override {
             return std::unique_ptr<IteratorBase>(
                 new Iterator({this, strings::StrCat(prefix, "::RandomWalkSample")})
             );
@@ -63,8 +63,26 @@ private:
             return shapes_;
         }
 
-        string DebugString() override {
+        string DebugString() const override {
             return "RandomWalkDatasetOp::Dataset";
+        }
+    protected:
+        Status AsGraphDefInternal(SerializationContext* ctx, DatasetGraphDefBuilder* b, Node** output) const override {
+            Node* neighbours = nullptr;
+            TF_RETURN_IF_ERROR(b->AddTensor(neighbours_, &neighbours));
+            Node* lengths = nullptr;
+            TF_RETURN_IF_ERROR(b->AddTensor(lengths_, &lengths));
+            Node* offsets = nullptr;
+            TF_RETURN_IF_ERROR(b->AddTensor(offsets_, &offsets));
+
+            Node* walk_length = nullptr;
+            TF_RETURN_IF_ERROR(b->AddScalar(walk_length_, &walk_length));
+            Node* seed = nullptr;
+            TF_RETURN_IF_ERROR(b->AddScalar(seed_, &seed));
+            Node* seed2 = nullptr;
+            TF_RETURN_IF_ERROR(b->AddScalar(seed2_, &seed2));
+
+            return Status::OK();
         }
     private:
         const Tensor neighbours_;
