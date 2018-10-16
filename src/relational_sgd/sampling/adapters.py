@@ -405,6 +405,32 @@ def append_packed_vertex_labels(packed_labels, lengths, offsets=None):
     return fn
 
 
+def append_vertex_vector_features(vector_features):
+    """ Adapts an existing sampler to append vector-valued features
+
+    This function adapts the given sampler by appending slices of
+    a features array to the sample containing the given vertex.
+
+    Parameters
+    ----------
+    vector_features: the features for all vertices.
+    """
+
+    def fn(data):
+        vertex_index = data['vertex_index']
+
+        if isinstance(vertex_index, tf.Tensor):
+            sample_labels = tf.gather(vector_features, vertex_index, axis=0)
+            labels_index = tf.range(tf.shape(sample_labels)[0])
+        else:
+            sample_labels = vector_features[vertex_index, :]
+            labels_index = np.arange(sample_labels.shape[0])
+
+        return {**data, 'labels': sample_labels, 'label_index': labels_index}
+
+    return fn
+
+
 def format_features_labels():
     """ The tensorflow estimator structures take in two arguments intended to represent
     the features and the labels of a given problem. We use two dictionaries with attributes
@@ -421,8 +447,7 @@ def format_features_labels():
 
     label_keys = [
         'label_index', 'labels', 'split',
-        'packed_labels', 'packed_labels_lengths', 'packed_labels_indices',
-        'num_labelled_vertex']
+        'packed_labels', 'packed_labels_lengths', 'packed_labels_indices']
 
     def fn(data):
         features = {k: v for k, v in data.items() if k in feature_keys}
@@ -447,11 +472,6 @@ def add_sample_size_info():
             'num_vertex': tf.size(data['vertex_index'])
         }
 
-        if 'labels' in data:
-            shape_info['num_labelled_vertex'] = tf.shape(data['labels'])[0]
-        else:
-            shape_info['num_labelled_vertex'] = tf.shape(data['packed_labels_lengths'])[0]
-
         return {**data, **shape_info}
 
     return fn
@@ -470,7 +490,6 @@ def padded_batch_samples(batch_size):
 
     def fn(dataset):
         label_pad_values = {
-            'num_labelled_vertex': 0
         }
 
         if 'split' in dataset.output_shapes[1]:
@@ -485,9 +504,10 @@ def padded_batch_samples(batch_size):
             label_pad_values['packed_labels'] = 0
             label_pad_values['packed_labels_lengths'] = 0
 
-        return dataset.apply(padded_batch_and_drop_remainder(
+        return dataset.padded_batch(
             batch_size, dataset.output_shapes,
-            (feature_pad_values, label_pad_values)))
+            (feature_pad_values, label_pad_values),
+            drop_remainder=True)
 
     return fn
 

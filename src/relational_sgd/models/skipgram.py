@@ -15,7 +15,7 @@ def make_skipgram():
     def make_label_logits(embeddings, features, mode, params):
         return tf.zeros([tf.shape(embeddings)[0], params['n_labels']])
 
-    def make_no_label_loss(logits, labelled_verts, present_labels, split):
+    def make_no_label_loss(logits, present_labels, split):
         return tf.constant(0, dtype=tf.float32)
 
     return make_node_classifier(make_label_logits=make_label_logits,
@@ -83,14 +83,13 @@ def make_multilabel_deep_logistic_regression():
                                 make_edge_pred_loss=make_simple_skipgram_loss(12))
 
 
-def make_multilabel_prediction_with_features(label_task_weight=0.5, regularization=0., clip=None, **kwargs):
-    """ Uses the skipgram objective for relational data, and predicts labels with logistic regression
-    using the skipgram embeddings as the features.
+def make_multilabel_prediction_with_features(label_task_weight=0.001, regularization=0., clip=None, **kwargs):
+    """ Uses the skipgram objective for relational data,
+    and vertices features that are real-valued vectors
 
     Parameters
     ----------
-    label_task_weight: the weight for the label task (between 0 and 1). By default, the label and edge
-        task are weighted equally.
+    label_task_weight: the weight for the label task (between 0 and 1). Default 0.001
     clip: if not None, the value to clip the edge loss at.
     kwargs: additional arguments are forwarded to the `make_node_classifier` template.
 
@@ -125,15 +124,14 @@ def make_multilabel_prediction_with_features(label_task_weight=0.5, regularizati
 #
 
 
-def _make_label_sigmoid_cross_entropy_loss(logits, labelled_verts, present_labels, split):
+def _make_label_sigmoid_cross_entropy_loss(logits, present_labels, split):
     """ Helper function to create label loss
 
     Parameters
     ----------
     logits: tensor of shape [batch_size, num_verts, num_labels]
-    labelled_verts: tensor of shape [batch_size, num_labelled_verts]; indexes labelled verts
-    present_labels: tensor of shape [batch_size, num_labelled_verts, num_labels]; labels of labelled verts
-    split: tensor of shape [batch_size, num_labelled_verts], 0 if censored, 1 if not censored
+    present_labels: tensor of shape [batch_size, num_verts, num_labels]; labels of labelled verts
+    split: tensor of shape [batch_size, num_verts], 0 if censored, 1 if not censored
 
     Returns
     -------
@@ -144,11 +142,8 @@ def _make_label_sigmoid_cross_entropy_loss(logits, labelled_verts, present_label
     else:
         batch_size = 1
 
-    #labelled_logits = tf.gather(logits, labelled_verts, axis=-2)
-    labelled_logits = logits
-
     label_pred_losses = tf.losses.sigmoid_cross_entropy(
-        present_labels, logits=labelled_logits, weights=tf.expand_dims(split, -1), reduction=tf.losses.Reduction.NONE)
+        present_labels, logits=logits, weights=tf.expand_dims(split, -1), reduction=tf.losses.Reduction.NONE)
 
     # sum rather than (tf default of) mean because ¯\_(ツ)_/¯
     label_pred_loss = tf.reduce_sum(label_pred_losses)

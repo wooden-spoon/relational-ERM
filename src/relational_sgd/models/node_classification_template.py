@@ -207,7 +207,7 @@ def make_node_classifier(make_label_logits,
         which computes the label logits for for each node.
     make_edge_logits: function (embeddings, features, edge_list, edge_weights, params) -> (label_logits),
         which computes the logits for each pair in edge_list.
-    make_label_pred_loss: function (label_logits, labelled_verts, present_labels) -> (losses),
+    make_label_pred_loss: function (label_logits, present_labels) -> (losses),
         which computes the label prediction loss.
     make_edge_pred_loss: function (embeddings, n_vert, el, w, params) -> (losses),
         which computes the edge prediction loss.
@@ -235,7 +235,7 @@ def make_node_classifier(make_label_logits,
         ----------
         features: dictionary of graph attributes {edge list, weights, ids of sampled vertices},
             and possibly additional vertex attributes
-        labels: {verts: [int], labels: [int, int]} where verts is indices of labelled vertices in the subgraph, and labels are labels
+        labels: dictionary of labels and friends. labels is tensor containing labels of the vertices in the sample
         mode: the estimator mode in which this model function is invoked.
         params: a dictionary of parameters.
 
@@ -257,7 +257,6 @@ def make_node_classifier(make_label_logits,
         embeddings = tf.reshape(embeddings, vertex_embedding_shape, name='vertex_embeddings_batch')
 
         # Vertex Label Predictions
-        labelled_verts = labels['label_index']
         present_labels = labels['labels']
         split = labels['split']
 
@@ -283,9 +282,9 @@ def make_node_classifier(make_label_logits,
             return tf.estimator.EstimatorSpec(mode, predictions=predictions)
 
         # label loss
-        with tf.name_scope('label_loss', values=[label_logits, labelled_verts, present_labels, split]):
+        with tf.name_scope('label_loss', values=[label_logits, present_labels, split]):
             label_pred_loss = make_label_pred_loss(
-                label_logits, labelled_verts, present_labels,
+                label_logits, present_labels,
                 tf.maximum(split, 0))  # clip the split, as -1 represents padded values.
 
             label_pred_size = tf.shape(label_logits)[-1]
