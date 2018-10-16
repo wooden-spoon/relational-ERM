@@ -90,17 +90,17 @@ private:
     TF_DISALLOW_COPY_AND_ASSIGN(UniformEdgeDatasetOp);
 
 
-    class Dataset: public GraphDatasetBase {
+    class Dataset: public DatasetBase {
     public:
         explicit Dataset(OpKernelContext* ctx, int64 seed, int64 seed2, int32 n,
                          Tensor neighbours, Tensor lengths, Tensor offsets):
-            GraphDatasetBase(ctx), neighbours_(std::move(neighbours)),
+            DatasetBase(DatasetContext(ctx)), neighbours_(std::move(neighbours)),
             lengths_(std::move(lengths)), offsets_(std::move(offsets)),
             n_(n), seed_(seed), seed2_(seed2)
         {
         }
 
-        std::unique_ptr<IteratorBase> MakeIterator(const string& prefix) const override {
+        std::unique_ptr<IteratorBase> MakeIteratorInternal(const string& prefix) const override {
             return std::unique_ptr<IteratorBase>(
                 new Iterator({this, strings::StrCat(prefix, "::UniformEdgeSample")})
             );
@@ -116,11 +116,29 @@ private:
             return *shapes;
         }
 
-        string DebugString() override {
+        string DebugString() const override {
             return "UniformEdgeDatasetOp::Dataset";
         }
+    
+    protected:
+        Status AsGraphDefInternal(SerializationContext* ctx, DatasetGraphDefBuilder* b, Node** output) const override {
+            Node* neighbours = nullptr;
+            TF_RETURN_IF_ERROR(b->AddTensor(neighbours_, &neighbours));
+            Node* lengths = nullptr;
+            TF_RETURN_IF_ERROR(b->AddTensor(lengths_, &lengths));
+            Node* offsets = nullptr;
+            TF_RETURN_IF_ERROR(b->AddTensor(offsets_, &offsets));
 
-     private:
+            Node* n = nullptr;
+            TF_RETURN_IF_ERROR(b->AddScalar(n_, &n));
+            Node* seed = nullptr;
+            TF_RETURN_IF_ERROR(b->AddScalar(seed_, &seed));
+            Node* seed2 = nullptr;
+            TF_RETURN_IF_ERROR(b->AddScalar(seed2_, &seed2));
+
+            return Status::OK();
+        }
+    private:
         Tensor neighbours_;
         Tensor lengths_;
         Tensor offsets_;

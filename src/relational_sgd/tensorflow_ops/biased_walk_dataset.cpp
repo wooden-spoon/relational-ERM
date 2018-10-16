@@ -283,18 +283,18 @@ public:
 private:
     TF_DISALLOW_COPY_AND_ASSIGN(BiasedWalkDatasetOp);
 
-    class Dataset: public GraphDatasetBase {
+    class Dataset: public DatasetBase {
     public:
         explicit Dataset(OpKernelContext* ctx, int64 seed, int64 seed2,
                          int32 walk_length, float p, float q,
                          Tensor neighbours, Tensor lengths, Tensor offsets,
                          AliasDrawData<int64, float> draw_data):
-            GraphDatasetBase(ctx), neighbours_(neighbours), lengths_(lengths), offsets_(offsets),
+            DatasetBase(DatasetContext(ctx)), neighbours_(neighbours), lengths_(lengths), offsets_(offsets),
             walk_length_(walk_length), seed_(seed), seed2_(seed2), draw_data_(std::move(draw_data))
         {
         }
 
-        std::unique_ptr<IteratorBase> MakeIterator(const string& prefix) const override {
+        std::unique_ptr<IteratorBase> MakeIteratorInternal(const string& prefix) const override {
             return std::unique_ptr<IteratorBase>(
                 new Iterator({this, strings::StrCat(prefix, "::BiasedWalkSample")})
             );
@@ -310,10 +310,32 @@ private:
             return *shapes;
         }
 
-        string DebugString() override {
+        string DebugString() const override {
             return "BiasedWalkDatasetOp::Dataset";
         }
+    
+    protected:
+        Status AsGraphDefInternal(SerializationContext* ctx, DatasetGraphDefBuilder* b, Node** output) const override {
+            Node* neighbours = nullptr;
+            TF_RETURN_IF_ERROR(b->AddTensor(neighbours_, &neighbours));
 
+            Node* lengths = nullptr;
+            TF_RETURN_IF_ERROR(b->AddTensor(lengths_, &lengths));
+
+            Node* offsets = nullptr;
+            TF_RETURN_IF_ERROR(b->AddTensor(offsets_, &offsets));
+
+            Node* walk_length = nullptr;
+            TF_RETURN_IF_ERROR(b->AddScalar(walk_length_, &walk_length));
+
+            Node* seed = nullptr;
+            TF_RETURN_IF_ERROR(b->AddScalar(seed_, &seed));
+
+            Node* seed2 = nullptr;
+            TF_RETURN_IF_ERROR(b->AddScalar(seed2_, &seed2));
+
+            return Status::OK();
+        }
     private:
         const Tensor neighbours_;
         const Tensor lengths_;

@@ -143,7 +143,7 @@ def _default_global_optimizer():
     return tf.train.GradientDescentOptimizer(learning_rate)
 
 
-def _make_polyak_averaging(embeddings, label_logits, mode, polyak, make_label_logits, params):
+def _make_polyak_averaging(embeddings, features, label_logits, mode, polyak, make_label_logits, params):
     batch_size = params['batch_size']
     decay = 0.99
 
@@ -163,7 +163,7 @@ def _make_polyak_averaging(embeddings, label_logits, mode, polyak, make_label_lo
         label_ema_op = label_ema.apply(tf.global_variables("label_logits"))
         with tf.control_dependencies([label_ema_op]):
             with tf.variable_scope("label_logits", reuse=True, custom_getter=label_ema_getter):
-                label_logits_predict = make_label_logits(embeddings, mode, params)
+                label_logits_predict = make_label_logits(embeddings, features, mode, params)
     else:
         # no polyak averaging; default behaviour
         label_logits_predict = label_logits
@@ -203,14 +203,14 @@ def make_node_classifier(make_label_logits,
 
     Parameters
     ----------
-    make_label_logits: function (embeddings, mode, params) -> (label_logits), which computes the class
-        label_logits for each node.
-    make_edge_logits: function (embeddings, edge_list, edge_weights, params) -> (label_logits),
-        which computes the label_logits for each pair in edge_list.
-    make_label_pred_loss: function (label_logits, labelled_verts, present_labels) -> (losses), which computes
-        the label prediction loss from the labels.
-    make_edge_pred_loss: function (embeddings, n_vert, el, w, params) -> (losses), which computes
-        the edge prediction loss.
+    make_label_logits: function (embeddings, features, mode, params) -> (logits),
+        which computes the label logits for for each node.
+    make_edge_logits: function (embeddings, features, edge_list, edge_weights, params) -> (label_logits),
+        which computes the logits for each pair in edge_list.
+    make_label_pred_loss: function (label_logits, present_labels) -> (losses),
+        which computes the label prediction loss.
+    make_edge_pred_loss: function (embeddings, n_vert, el, w, params) -> (losses),
+        which computes the edge prediction loss.
     embedding_optimizer: the optimizer (or a nullary function creating the optimizer) to use for the embedding variables.
     global_optimizer: the optimizer (or a nullary function creating the optimizer) to use for the global variables.
     polyak: bool, default True. If true, label predictions are made using an exponentially weighted moving average of
@@ -235,7 +235,7 @@ def make_node_classifier(make_label_logits,
         ----------
         features: dictionary of graph attributes {edge list, weights, ids of sampled vertices},
             and possibly additional vertex attributes
-        labels: {verts: [int], labels: [int, int]} where verts is indices of labelled vertices in the subgraph, and labels are labels
+        labels: dictionary of labels and friends. labels is tensor containing labels of the vertices in the sample
         mode: the estimator mode in which this model function is invoked.
         params: a dictionary of parameters.
 
@@ -257,7 +257,6 @@ def make_node_classifier(make_label_logits,
         embeddings = tf.reshape(embeddings, vertex_embedding_shape, name='vertex_embeddings_batch')
 
         # Vertex Label Predictions
-        labelled_verts = labels['label_index']
         present_labels = labels['labels']
         split = labels['split']
 
@@ -266,11 +265,11 @@ def make_node_classifier(make_label_logits,
             split = tf.where(tf.equal(vert_is_positive,1), split, -tf.ones_like(split))
 
         with tf.variable_scope("label_logits"):
-            label_logits = make_label_logits(embeddings, mode, params)
+            label_logits = make_label_logits(embeddings, features, mode, params)
 
         # polyak averaging
         label_ema_op, label_logits_predict = _make_polyak_averaging(
-            embeddings, label_logits, mode, polyak, make_label_logits, params)
+            embeddings, features, label_logits, mode, polyak, make_label_logits, params)
 
         predicted_labels = tf.cast(tf.greater(label_logits_predict, 0.), label_logits.dtype)
 
@@ -283,9 +282,9 @@ def make_node_classifier(make_label_logits,
             return tf.estimator.EstimatorSpec(mode, predictions=predictions)
 
         # label loss
-        with tf.name_scope('label_loss', values=[label_logits, labelled_verts, present_labels, split]):
+        with tf.name_scope('label_loss', values=[label_logits, present_labels, split]):
             label_pred_loss = make_label_pred_loss(
-                label_logits, labelled_verts, present_labels,
+                label_logits, present_labels,
                 tf.maximum(split, 0))  # clip the split, as -1 represents padded values.
 
             label_pred_size = tf.shape(label_logits)[-1]
@@ -330,7 +329,7 @@ def make_node_classifier(make_label_logits,
         n_vert = tf.shape(features['vertex_index'])
 
         # Edge predictions
-        edge_logits = make_edge_logits(embeddings, edge_list, weights, params)
+        edge_logits = make_edge_logits(embeddings, features, edge_list, weights, params)
 
         # edge loss
         with tf.name_scope('edge_loss', values=[edge_logits, edge_list, weights]):

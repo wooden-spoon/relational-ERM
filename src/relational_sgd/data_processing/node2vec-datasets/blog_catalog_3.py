@@ -6,10 +6,17 @@ data from http://socialcomputing.asu.edu/datasets/BlogCatalog3
 
 import pandas as pd
 import numpy as np
+import scipy as sp
 import networkx as nx
 import os
 
-from relational_sgd.data_processing.helpers import nx_from_edgelist
+
+def _nx_from_edgelist(edge_list):
+    V = np.unique(edge_list).shape[0]
+    as_csr = sp.sparse.csr_matrix((np.ones_like(edge_list[:, 0]), (edge_list[:, 0], edge_list[:, 1])), [V,V])
+    G = nx.from_scipy_sparse_matrix(as_csr)
+    return G
+
 
 def main():
     bc_dir = '../data/blog_catalog_3'
@@ -40,7 +47,7 @@ def main():
     np.savez_compressed(save_path, edge_list=edge_list, weights=weights, group=labels)
 
     # edge list csv to pass to node2vec
-    nx.write_edgelist(nx_from_edgelist(edge_list), os.path.join(bc_dir, "blog_catalog.edgelist"))
+    nx.write_edgelist(_nx_from_edgelist(edge_list), os.path.join(bc_dir, "blog_catalog.edgelist"))
 
 if __name__ == '__main__':
     main()
