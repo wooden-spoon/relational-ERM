@@ -478,7 +478,6 @@ def add_sample_size_info():
 
 
 def padded_batch_samples(batch_size):
-    from tensorflow.contrib.data import padded_batch_and_drop_remainder
     feature_pad_values = {
         'edge_list': 0,
         'weights': -1.0,
