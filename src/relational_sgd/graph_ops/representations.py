@@ -109,25 +109,25 @@ def create_packed_adjacency_list(adjacency_list):
     return PackedAdjacencyList(neighbours, weights, offsets, lengths, np.arange(num_vertex))
 
 
-def create_packed_adjacency_from_edge_list(edge_list):
+def create_packed_adjacency_from_redundant_edge_list(redundant_edge_list):
     """ Creates a packed adjacency list from the given edge list.
 
     Parameters
     ----------
-    edge_list: a two dimensional array containing the edge list.
+    redundant_edge_list: a two dimensional array containing the edge list.
 
     Returns
     -------
     packed_adjacency_list: the packed adjacency list corresponding to the given edge list.
     """
-    idx = np.lexsort((edge_list[:, 1], edge_list[:, 0]))
-    edge_list = edge_list[idx, :]
-    vertices, counts = np.unique(edge_list[:, 0], return_counts=True)
+    idx = np.lexsort((redundant_edge_list[:, 1], redundant_edge_list[:, 0]))
+    redundant_edge_list = redundant_edge_list[idx, :]
+    vertices, counts = np.unique(redundant_edge_list[:, 0], return_counts=True)
 
     if vertices[0] != 0 or np.any(np.diff(vertices) != 1):
         raise ValueError("Source vertices do not form a contiguous range!")
 
-    neighbours = np.require(edge_list[:, 1], dtype=np.int32, requirements='C')
+    neighbours = np.require(redundant_edge_list[:, 1], dtype=np.int32, requirements='C')
     lengths = counts.astype(np.int32, copy=False)
     offsets = np.empty_like(lengths)
     np.cumsum(lengths[:-1], out=offsets[1:])

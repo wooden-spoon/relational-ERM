@@ -128,7 +128,6 @@ def make_n2v_test_dataset_fn(args, graph_data):
     pred_features = {'vertex_index': np.expand_dims(np.array(range(graph_data.num_vertices)), 1),
                      'is_positive': np.expand_dims(np.array(range(graph_data.num_vertices)), 1)}
     pred_labels = {'labels': np.expand_dims(graph_data.labels,1),
-                   'label_index': np.expand_dims(np.array(range(graph_data.num_vertices)),1),
                    'split': np.expand_dims(in_train,1)}
 
     def n2v_test_dataset_fn():

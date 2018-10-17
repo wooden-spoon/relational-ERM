@@ -9,10 +9,64 @@ from relational_sgd.graph_ops.representations import PackedAdjacencyList
 
 GraphData = namedtuple('GraphData', ['edge_list',
                                      'weights',
+                                     'node_features',
                                      'labels',
                                      'adjacency_list',
                                      'num_vertices',
                                      'num_labels'])
+
+def load_data_graphsage(data_path=None):
+    """
+    Loads preprocessed data in the form of
+    {'edge_list': edge_list, 'features': features, 'labels': labels}
+
+    'Features' is a real-valued array of shape [n_vert, feature_dimension] giving
+    some (embedding of) features for each vertex
+
+    Parameters
+    ----------
+    data_path: path to the file to load
+
+    Returns
+    -------
+    An instance of GraphData containing the parsed graph data for the dataset.
+
+    """
+    if data_path is None:
+        data_path = '../data/ppi/ppi.npz'
+
+    # use tensorflow loading to support loading from
+    # cloud providers
+    with tf.gfile.Open(data_path, mode='rb') as f:
+        loaded = np.load(f, allow_pickle=False)
+
+    # graph attributes
+    edge_list = loaded['edge_list'].astype(np.int32)
+
+    if 'weights' in loaded:
+        weights = loaded['weights'].astype(np.float32)
+    else:
+        weights = np.ones(edge_list.shape[0], dtype=np.float32)
+
+    adjacency_list = edge_list_to_adj_list(edge_list, weights)
+    adjacency_list = create_packed_adjacency_list(adjacency_list)
+    num_vertices = len(adjacency_list)
+
+    # vertex attributes
+    labels = loaded['labels'].astype(np.float32)
+    node_features = loaded['features'].astype(np.float32)
+
+    num_labels = labels.shape[1]
+
+    return GraphData(edge_list=edge_list,
+                     weights=weights,
+                     labels=labels,
+                     node_features=node_features,
+                     adjacency_list=adjacency_list,
+                     num_vertices=num_vertices,
+                     num_labels=num_labels)
+
+
 
 
 def load_data_node2vec(data_path=None):
@@ -47,6 +101,7 @@ def load_data_node2vec(data_path=None):
         weights = loaded['weights'].astype(np.float32)
     else:
         weights = np.ones(edge_list.shape[0], dtype=np.float32)
+
     labels = loaded['group'].astype(np.float32)
 
     # Remove self-edges
@@ -60,7 +115,13 @@ def load_data_node2vec(data_path=None):
     adjacency_list = create_packed_adjacency_list(adjacency_list)
     num_labels = labels.shape[1]
 
-    return GraphData(edge_list, weights, labels, adjacency_list, num_vertices, num_labels)
+    return GraphData(edge_list=edge_list,
+                     weights=weights,
+                     labels=labels,
+                     node_features=None,
+                     adjacency_list=adjacency_list,
+                     num_vertices=num_vertices,
+                     num_labels=num_labels)
 
 
 def load_data_wikipedia_hyperlink(data_path=None):

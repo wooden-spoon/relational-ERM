@@ -71,7 +71,7 @@ def preprocess_data(data_directory='../data/pokec'):
 
 
 def preprocess_packed_adjacency_list(data):
-    from ..graph_ops.representations import create_packed_adjacency_from_edge_list
+    from ..graph_ops.representations import create_packed_adjacency_from_redundant_edge_list
 
     # Load the current edge list, and go to canonical form
     # i.e., remove self-edges and convert to undirected graph
@@ -82,7 +82,7 @@ def preprocess_packed_adjacency_list(data):
 
     # Compute redundant edge list
     edge_list = np.concatenate((edge_list, np.flip(edge_list, axis=1)))
-    packed_adj_list = create_packed_adjacency_from_edge_list(edge_list)
+    packed_adj_list = create_packed_adjacency_from_redundant_edge_list(edge_list)
 
     return {
         'neighbours': packed_adj_list.neighbours,
