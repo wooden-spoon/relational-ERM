@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a999fbb8-2421-4d92-ac9b-194c16581287" name="Default" comment="modifying dataset_logic to handle preprocessed graphsage data">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/features-dev/create_dataset.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/features-scratch/__init__.py" afterPath="$PROJECT_DIR$/features-dev/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/src.iml" afterPath="$PROJECT_DIR$/.idea/src.iml" />
+    <list default="true" id="a999fbb8-2421-4d92-ac9b-194c16581287" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/features-dev/run_sup_pred_w_features.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/scripts/run_sup_pred_w_features.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relational_sgd/sampling/adapters.py" afterPath="$PROJECT_DIR$/relational_sgd/sampling/adapters.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scripts/dataset_logic.py" afterPath="$PROJECT_DIR$/scripts/dataset_logic.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relational_sgd/models/skipgram.py" afterPath="$PROJECT_DIR$/relational_sgd/models/skipgram.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,65 +16,55 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="525">
-      <file leaf-file-name="dataset_logic.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/dataset_logic.py">
+      <file leaf-file-name="node_classification_template.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/relational_sgd/models/node_classification_template.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-608">
-              <caret line="108" column="0" lean-forward="true" selection-start-line="106" selection-start-column="0" selection-end-line="108" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="create_dataset.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/features-dev/create_dataset.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="11" column="22" lean-forward="false" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
+            <state relative-caret-position="226">
+              <caret line="246" column="0" lean-forward="true" selection-start-line="246" selection-start-column="0" selection-end-line="246" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="adapters.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/relational_sgd/sampling/adapters.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1237">
-              <caret line="538" column="0" lean-forward="true" selection-start-line="504" selection-start-column="0" selection-end-line="538" selection-end-column="0" />
-              <folding>
-                <element signature="e#574#592#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="representations.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/relational_sgd/graph_ops/representations.py">
+      <file leaf-file-name="skipgram.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/relational_sgd/models/skipgram.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="416">
-              <caret line="13" column="27" lean-forward="false" selection-start-line="13" selection-start-column="21" selection-end-line="13" selection-end-column="27" />
+              <caret line="92" column="14" lean-forward="false" selection-start-line="92" selection-start-column="14" selection-end-line="92" selection-end-column="14" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="graph_sage_loader.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/graph_sage_loader.py">
+      <file leaf-file-name="create_dataset.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/features-dev/create_dataset.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4256">
-              <caret line="141" column="20" lean-forward="false" selection-start-line="141" selection-start-column="20" selection-end-line="141" selection-end-column="20" />
-              <folding />
+            <state relative-caret-position="693">
+              <caret line="88" column="0" lean-forward="true" selection-start-line="51" selection-start-column="0" selection-end-line="88" selection-end-column="0" />
+              <folding>
+                <element signature="e#107#130#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="homo_sapiens.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets/homo_sapiens.py">
+      <file leaf-file-name="run_sup_pred_w_features.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/features-dev/run_sup_pred_w_features.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="672">
-              <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="26" selection-end-column="44" />
+            <state relative-caret-position="32">
+              <caret line="82" column="45" lean-forward="true" selection-start-line="82" selection-start-column="45" selection-end-line="82" selection-end-column="45" />
+              <folding>
+                <element signature="e#107#117#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="run_skipgram_simple.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/scripts/run_skipgram_simple.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="386">
+              <caret line="199" column="0" lean-forward="true" selection-start-line="195" selection-start-column="0" selection-end-line="199" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -94,9 +81,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>pal</find>
-      <find>id_map</find>
-      <find>args</find>
       <find>get</find>
       <find>make_dataset</find>
       <find>fact</find>
@@ -124,6 +108,9 @@
       <find>batch_size</find>
       <find>assert</find>
       <find>label</find>
+      <find>regu</find>
+      <find>polyak</find>
+      <find>params</find>
     </findStrings>
     <replaceStrings>
       <replace>make_label_logits(embeddings, features</replace>
@@ -138,8 +125,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/relational_sgd/data_processing/wikipedia_word_cooccurr.py" />
-        <option value="$PROJECT_DIR$/relational_sgd/models/metrics.py" />
         <option value="$PROJECT_DIR$/relational_sgd/models/logistic_regression.py" />
         <option value="$PROJECT_DIR$/scripts/helpers.py" />
         <option value="$PROJECT_DIR$/relational_sgd/graph_ops/structure.py" />
@@ -179,16 +164,18 @@
         <option value="$PROJECT_DIR$/relational_sgd/data_processing/utils.py" />
         <option value="$PROJECT_DIR$/scripts/run_wikipedia_links.py" />
         <option value="$PROJECT_DIR$/relational_sgd/tensorflow_ops/biased_walk_dataset.cpp" />
-        <option value="$PROJECT_DIR$/relational_sgd/models/skipgram.py" />
         <option value="$PROJECT_DIR$/relational_sgd/models/node_classification_template.py" />
         <option value="$PROJECT_DIR$/scripts/run_skipgram_simple.py" />
-        <option value="$PROJECT_DIR$/scripts/run_sup_pred_w_features.py" />
         <option value="$PROJECT_DIR$/relational_sgd/graph_ops/representations.py" />
         <option value="$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets/homo_sapiens.py" />
         <option value="$PROJECT_DIR$/relational_sgd/data_processing/graph_sage_loader.py" />
         <option value="$PROJECT_DIR$/scripts/dataset_logic.py" />
         <option value="$PROJECT_DIR$/relational_sgd/sampling/adapters.py" />
         <option value="$PROJECT_DIR$/features-scratch/create_dataset.py" />
+        <option value="$PROJECT_DIR$/scripts/run_sup_pred_w_features.py" />
+        <option value="$PROJECT_DIR$/features-dev/create_dataset.py" />
+        <option value="$PROJECT_DIR$/relational_sgd/models/skipgram.py" />
+        <option value="$PROJECT_DIR$/features-dev/run_sup_pred_w_features.py" />
       </list>
     </option>
   </component>
@@ -231,6 +218,17 @@
             <path>
               <item name="src" type="b2602c69:ProjectViewProjectNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="relational_sgd" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="src" type="b2602c69:ProjectViewProjectNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="relational_sgd" type="462c0819:PsiDirectoryNode" />
+              <item name="models" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="src" type="b2602c69:ProjectViewProjectNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="scripts" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -244,16 +242,17 @@
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets" />
-      <recent name="$PROJECT_DIR$/graph_ops" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/scripts" />
       <recent name="$PROJECT_DIR$/relational_sgd/models" />
       <recent name="$PROJECT_DIR$/relational_sgd/data_processing" />
       <recent name="$PROJECT_DIR$/slurm_scripts" />
       <recent name="$PROJECT_DIR$/data_processing" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/features-dev" />
+      <recent name="$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets" />
+      <recent name="$PROJECT_DIR$/graph_ops" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -420,20 +419,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1524078251826</updated>
-    </task>
-    <task id="LOCAL-00083" summary="remove extra global step update">
-      <created>1525557166015</created>
-      <option name="number" value="00083" />
-      <option name="presentableId" value="LOCAL-00083" />
-      <option name="project" value="LOCAL" />
-      <updated>1525557166015</updated>
-    </task>
-    <task id="LOCAL-00084" summary="test slurm script (+ take learning rates as inputs)">
-      <created>1525568273181</created>
-      <option name="number" value="00084" />
-      <option name="presentableId" value="LOCAL-00084" />
-      <option name="project" value="LOCAL" />
-      <updated>1525568273181</updated>
     </task>
     <task id="LOCAL-00085" summary="slurm script to loop over sampling schemes and global learning rates&#10;for protein-protein (500k iterations)">
       <created>1525576184135</created>
@@ -764,7 +749,21 @@
       <option name="project" value="LOCAL" />
       <updated>1539788881211</updated>
     </task>
-    <option name="localTasksCounter" value="132" />
+    <task id="LOCAL-00132" summary="more modifications to handle graphsage type data">
+      <created>1539808397769</created>
+      <option name="number" value="00132" />
+      <option name="presentableId" value="LOCAL-00132" />
+      <option name="project" value="LOCAL" />
+      <updated>1539808397772</updated>
+    </task>
+    <task id="LOCAL-00133" summary="removed a chunk of (irrelevant) debugging code">
+      <created>1539812187773</created>
+      <option name="number" value="00133" />
+      <option name="presentableId" value="LOCAL-00133" />
+      <option name="project" value="LOCAL" />
+      <updated>1539812187773</updated>
+    </task>
+    <option name="localTasksCounter" value="134" />
     <servers />
   </component>
   <component name="TodoView">
@@ -785,7 +784,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33520448" sideWeight="0.15435411" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3648757" sideWeight="0.8959967" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287891" sideWeight="0.49360296" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33520448" sideWeight="0.8456459" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33520448" sideWeight="0.8456459" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24969047" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39935845" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -828,8 +827,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="experiment w different values of p in p-sampling" />
-    <MESSAGE value="added node2vec style scoring" />
     <MESSAGE value="names for node2vec and specified eval" />
     <MESSAGE value="janice script to sweep joint training" />
     <MESSAGE value="adding local learning rate to sweep" />
@@ -853,7 +850,9 @@
     <MESSAGE value="Script to load data and process data in graphsage format" />
     <MESSAGE value="Cleanup" />
     <MESSAGE value="modifying dataset_logic to handle preprocessed graphsage data" />
-    <option name="LAST_COMMIT_MESSAGE" value="modifying dataset_logic to handle preprocessed graphsage data" />
+    <MESSAGE value="more modifications to handle graphsage type data" />
+    <MESSAGE value="removed a chunk of (irrelevant) debugging code" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed a chunk of (irrelevant) debugging code" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1027,35 +1026,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/models/node_classification_template.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="284" column="63" lean-forward="false" selection-start-line="284" selection-start-column="63" selection-end-line="284" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/relational_sgd/models/toy_model.py" />
-    <entry file="file://$PROJECT_DIR$/relational_sgd/models/skipgram.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="141" column="9" lean-forward="false" selection-start-line="141" selection-start-column="9" selection-end-line="141" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/run_skipgram_simple.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="130" column="0" lean-forward="false" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/run_sup_pred_w_features.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="404">
-          <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/relational_sgd/sampling/factories.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-6025">
@@ -1100,7 +1071,7 @@
         <state relative-caret-position="1237">
           <caret line="538" column="0" lean-forward="true" selection-start-line="504" selection-start-column="0" selection-end-line="538" selection-end-column="0" />
           <folding>
-            <element signature="e#574#592#0" expanded="true" />
+            <element signature="e#574#592#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1110,16 +1081,52 @@
         <state relative-caret-position="-608">
           <caret line="108" column="0" lean-forward="true" selection-start-line="106" selection-start-column="0" selection-end-line="108" selection-end-column="0" />
           <folding>
-            <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#0#15#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/relational_sgd/models/node_classification_template.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="246" column="0" lean-forward="true" selection-start-line="246" selection-start-column="0" selection-end-line="246" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/relational_sgd/models/skipgram.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="92" column="14" lean-forward="false" selection-start-line="92" selection-start-column="14" selection-end-line="92" selection-end-column="14" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/features-dev/create_dataset.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="11" column="22" lean-forward="false" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
+        <state relative-caret-position="693">
+          <caret line="88" column="0" lean-forward="true" selection-start-line="51" selection-start-column="0" selection-end-line="88" selection-end-column="0" />
+          <folding>
+            <element signature="e#107#130#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/run_skipgram_simple.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="386">
+          <caret line="199" column="0" lean-forward="true" selection-start-line="195" selection-start-column="0" selection-end-line="199" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/features-dev/run_sup_pred_w_features.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="82" column="45" lean-forward="true" selection-start-line="82" selection-start-column="45" selection-end-line="82" selection-end-column="45" />
+          <folding>
+            <element signature="e#107#117#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

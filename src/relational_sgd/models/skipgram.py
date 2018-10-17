@@ -83,13 +83,16 @@ def make_multilabel_deep_logistic_regression():
                                 make_edge_pred_loss=make_simple_skipgram_loss(12))
 
 
-def make_multilabel_prediction_with_features(label_task_weight=0.001, regularization=0., clip=None, **kwargs):
+def make_class_prediction_with_features(label_task_weight=0.001, regularization=0., clip=None, **kwargs):
     """ Uses the skipgram objective for relational data,
     and vertices features that are real-valued vectors
+
+    Note: this is a demo chosen for simplicity, and (probably) doesn't actually perform very well
 
     Parameters
     ----------
     label_task_weight: the weight for the label task (between 0 and 1). Default 0.001
+    regularization: regularization applied to neural net
     clip: if not None, the value to clip the edge loss at.
     kwargs: additional arguments are forwarded to the `make_node_classifier` template.
 
@@ -99,16 +102,21 @@ def make_multilabel_prediction_with_features(label_task_weight=0.001, regulariza
     """
 
     def make_label_logits(embeddings, features, mode, params):
-        # actually computes 0.5 * \sum w^2, so it should just reproduce sklearn
         regularizer = tf.contrib.layers.l2_regularizer(scale=label_task_weight * regularization)
 
-        layer = tf.layers.dense(
-            embeddings, params['n_labels'], activation=None, use_bias=True,
+        vertex_features = features['vertex_features']
+        embedding_and_features = tf.concat([embeddings,vertex_features], axis=-1)
+
+        for units in params['hidden_units']:
+            net = tf.layers.dense(embedding_and_features, units=units, activation=tf.nn.relu)
+
+        last_layer = tf.layers.dense(
+            net, params['n_classes'], activation=None, use_bias=True,
             kernel_regularizer=regularizer,
             bias_regularizer=regularizer,
             name='logits_labels')
 
-        return layer
+        return last_layer
 
     edge_task_weight = 1 - label_task_weight
 
