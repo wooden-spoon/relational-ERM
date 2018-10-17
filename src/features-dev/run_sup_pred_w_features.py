@@ -92,7 +92,7 @@ def main():
 
     params={
         **vertex_embedding_params,
-        'hidden_units' : [200, 200]  # Jaan net,
+        'hidden_units' : [200, 200], # Jaan net
         'n_classes':  max(graph_data.classes)+1,
         'num_vertices': graph_data.num_vertices,
         'batch_size': args.batch_size
