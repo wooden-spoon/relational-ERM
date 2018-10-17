@@ -52,7 +52,6 @@ def main():
     tf.enable_eager_execution()
 
     graph_data = load_data_graphsage()
-    # graph_data = graph_data._replace(classes = np.expand_dims(graph_data.classes, 1))
 
     args = namedtuple('dummyArgs', ['num_edges',
                                     'window_size',
