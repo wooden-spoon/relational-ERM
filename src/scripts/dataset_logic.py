@@ -60,7 +60,7 @@ def load_data_graphsage(data_path=None):
 
     adjacency_list = PackedAdjacencyList(neighbours, None, offsets, lengths, np.arange(len(lengths)))
 
-    num_vertices = len(neighbours)
+    num_vertices = len(lengths)
 
     # vertex attributes
     classes = loaded['classes'].astype(np.int32)

@@ -401,6 +401,37 @@ def append_packed_vertex_labels(packed_labels, lengths, offsets=None):
     return fn
 
 
+def append_vertex_classes(classes):
+    """ Adapts an existing sampler to append classes, 1-hot encoded.
+
+    This function adapts the given sampler by 1-hot encoding the vertex classes and appending these as "labels".
+
+    Parameters
+    ----------
+    classes: the labels for each vertex.
+    """
+
+    num_classes = classes.max()+1
+
+    def fn(data):
+        if 'labels' in data:
+            raise Exception("labels already defined when append_vertex_classes called")
+
+        vertex_index = data['vertex_index']
+
+        if isinstance(vertex_index, tf.Tensor):
+            sample_classes = tf.gather(classes, vertex_index)
+        else:
+            sample_classes = classes[vertex_index]
+
+        sample_labels = tf.one_hot(sample_classes, depth=num_classes)
+
+        return {**data, 'labels': sample_labels}
+
+    return fn
+
+
+
 def append_vertex_vector_features(vector_features):
     """ Adapts an existing sampler to append vector-valued features
 
@@ -482,6 +513,9 @@ def padded_batch_samples(batch_size):
     }
 
     def fn(dataset):
+        if 'vertex_features' in dataset.output_shapes[0]:
+            feature_pad_values['vertex_features'] = 0.0
+
         label_pad_values = {
         }
 

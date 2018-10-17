@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a999fbb8-2421-4d92-ac9b-194c16581287" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/relational_sgd/data_processing/blog_catalog_3.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/relational_sgd/data_processing/helpers.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/relational_sgd/data_processing/homo_sapiens.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/relational_sgd/data_processing/load_node2vec_embeddings.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/relational_sgd/data_processing/wikipedia_word_cooccurr.py" afterPath="" />
+    <list default="true" id="a999fbb8-2421-4d92-ac9b-194c16581287" name="Default" comment="modifying dataset_logic to handle preprocessed graphsage data">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/features-dev/create_dataset.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/features-scratch/__init__.py" afterPath="$PROJECT_DIR$/features-dev/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/src.iml" afterPath="$PROJECT_DIR$/.idea/src.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/relational_sgd/sampling/adapters.py" afterPath="$PROJECT_DIR$/relational_sgd/sampling/adapters.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scripts/dataset_logic.py" afterPath="$PROJECT_DIR$/scripts/dataset_logic.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,66 +19,55 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="525">
-      <file leaf-file-name="blog_catalog_3.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets/blog_catalog_3.py">
+      <file leaf-file-name="dataset_logic.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/scripts/dataset_logic.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="576">
-              <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+            <state relative-caret-position="-608">
+              <caret line="108" column="0" lean-forward="true" selection-start-line="106" selection-start-column="0" selection-end-line="108" selection-end-column="0" />
               <folding>
-                <element signature="e#110#129#0" expanded="true" />
+                <element signature="e#0#15#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="wikipedia_hyperlink.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/wikipedia_hyperlink.py">
+      <file leaf-file-name="create_dataset.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/features-dev/create_dataset.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="9" selection-end-column="3" />
-              <folding>
-                <element signature="e#190#199#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="toy_model.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/relational_sgd/models/toy_model.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+            <state relative-caret-position="352">
+              <caret line="11" column="22" lean-forward="false" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Skipgram-Demo.ipynb" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/notebooks/Skipgram-Demo.ipynb">
-          <provider selected="true" editor-type-id="ipnb-editor">
-            <state>
-              <selected id="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="skipgram.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/relational_sgd/models/skipgram.py">
+      <file leaf-file-name="adapters.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/relational_sgd/sampling/adapters.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3168">
-              <caret line="102" column="39" lean-forward="false" selection-start-line="102" selection-start-column="39" selection-end-line="102" selection-end-column="39" />
+            <state relative-caret-position="1237">
+              <caret line="538" column="0" lean-forward="true" selection-start-line="504" selection-start-column="0" selection-end-line="538" selection-end-column="0" />
               <folding>
-                <element signature="e#0#23#0" expanded="true" />
+                <element signature="e#574#592#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="wikipedia_word_cooccurr.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets/wikipedia_word_cooccurr.py">
+      <file leaf-file-name="representations.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/relational_sgd/graph_ops/representations.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="416">
+              <caret line="13" column="27" lean-forward="false" selection-start-line="13" selection-start-column="21" selection-end-line="13" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="graph_sage_loader.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/graph_sage_loader.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4256">
+              <caret line="141" column="20" lean-forward="false" selection-start-line="141" selection-start-column="20" selection-end-line="141" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -85,18 +76,8 @@
       <file leaf-file-name="homo_sapiens.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets/homo_sapiens.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="384">
-              <caret line="12" column="50" lean-forward="false" selection-start-line="12" selection-start-column="50" selection-end-line="12" selection-end-column="50" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="node_classification_template.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/relational_sgd/models/node_classification_template.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6624">
-              <caret line="209" column="22" lean-forward="false" selection-start-line="209" selection-start-column="22" selection-end-line="209" selection-end-column="22" />
+            <state relative-caret-position="672">
+              <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="26" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -113,36 +94,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>is_pos</find>
-      <find>feature</find>
-      <find>py_</find>
-      <find>max</find>
-      <find>vertex_index</find>
-      <find>biased</find>
-      <find>regularization</find>
-      <find>embedding</find>
-      <find>regulariz</find>
-      <find>make_label_spar</find>
-      <find>random</find>
-      <find>double</find>
-      <find>regulize</find>
-      <find>learning_rate</find>
-      <find>clip</find>
-      <find>window</find>
+      <find>pal</find>
+      <find>id_map</find>
+      <find>args</find>
+      <find>get</find>
+      <find>make_dataset</find>
+      <find>fact</find>
+      <find>dataset</find>
+      <find>MakeIteratorInternal</find>
+      <find>prefe</find>
+      <find>data</find>
+      <find>data[</find>
+      <find>RandomW</find>
+      <find>labelled</find>
+      <find>split</find>
+      <find>labelled_verts</find>
+      <find>labelled_ver</find>
+      <find>padded_batch_and</find>
+      <find>labelled_vert</find>
+      <find>labelled_</find>
+      <find>padded_batch_an</find>
+      <find>label_index</find>
       <find>batch</find>
-      <find>canon</find>
-      <find>exotic_</find>
-      <find>labels</find>
-      <find>tsv</find>
-      <find>wenda</find>
-      <find>victor</find>
-      <find>author</find>
-      <find>polyak</find>
-      <find>features</find>
-      <find>make_label_l</find>
-      <find>_pol</find>
-      <find>make_label_logits(embeddings,</find>
-      <find>make_edge_list_logits(embeddings,</find>
+      <find>label_ind</find>
+      <find>labels_ind</find>
+      <find>graph_data.e</find>
+      <find>.num_labels</find>
+      <find>GraphData</find>
+      <find>batch_size</find>
+      <find>assert</find>
+      <find>label</find>
     </findStrings>
     <replaceStrings>
       <replace>make_label_logits(embeddings, features</replace>
@@ -151,23 +132,17 @@
     </replaceStrings>
   </component>
   <component name="Git.Settings">
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/relational_sgd/models/toy_model.py" />
-        <option value="$PROJECT_DIR$/relational_sgd/models/node2vec.py" />
-        <option value="$PROJECT_DIR$/scripts/skipgram.py" />
-        <option value="$PROJECT_DIR$/relational_sgd/sampling/p_sampling_cython.pyx" />
-        <option value="$PROJECT_DIR$/relational_sgd/sampling/p_sampling.py" />
-        <option value="$PROJECT_DIR$/scripts/example.py" />
         <option value="$PROJECT_DIR$/relational_sgd/data_processing/wikipedia_word_cooccurr.py" />
         <option value="$PROJECT_DIR$/relational_sgd/models/metrics.py" />
         <option value="$PROJECT_DIR$/relational_sgd/models/logistic_regression.py" />
         <option value="$PROJECT_DIR$/scripts/helpers.py" />
         <option value="$PROJECT_DIR$/relational_sgd/graph_ops/structure.py" />
-        <option value="$PROJECT_DIR$/relational_sgd/graph_ops/representations.py" />
         <option value="$PROJECT_DIR$/relational_sgd/graph_ops/tensorflow.py" />
         <option value="$PROJECT_DIR$/scripts/logistic_regression.py" />
         <option value="$PROJECT_DIR$/relational_sgd/data_processing/blog_catalog_3.py" />
@@ -184,7 +159,6 @@
         <option value="$PROJECT_DIR$/scripts/tf_emb_log_reg.py" />
         <option value="$PROJECT_DIR$/relational_sgd/data_processing/load_node2vec_embeddings.py" />
         <option value="$PROJECT_DIR$/relational_sgd/data_processing/homo_sapiens.py" />
-        <option value="$PROJECT_DIR$/scripts/dataset_logic.py" />
         <option value="$PROJECT_DIR$/slurm_scripts/emayhem_run_skipgram_cpu.sh" />
         <option value="$PROJECT_DIR$/slurm_scripts/emayhem_run_logreg_gpu.sh" />
         <option value="$PROJECT_DIR$/slurm_scripts/emayhem_run_skipgram_gpu.sh" />
@@ -193,20 +167,28 @@
         <option value="$PROJECT_DIR$/relational_sgd/optimizers/precond_inverse_hessian.py" />
         <option value="$PROJECT_DIR$/slurm_scripts/node2vec_sweep_cpu.sh" />
         <option value="$PROJECT_DIR$/slurm_scripts/skipgram_submit_cpu.sh" />
-        <option value="$PROJECT_DIR$/scripts/run_skipgram_simple.py" />
         <option value="$PROJECT_DIR$/relational_sgd/sampling/factories.py" />
-        <option value="$PROJECT_DIR$/relational_sgd/sampling/adapters.py" />
         <option value="$PROJECT_DIR$/models/logistic_reg_node2vec.py" />
         <option value="$PROJECT_DIR$/relational_sgd/data_processing/load_erm_embeddings.py" />
         <option value="$PROJECT_DIR$/figures/igraph_figures.py" />
         <option value="$PROJECT_DIR$/setup.py" />
         <option value="$PROJECT_DIR$/relational_sgd/data_processing/wikipedia_hyperlink.py" />
-        <option value="$PROJECT_DIR$/relational_sgd/models/node_classification_template.py" />
         <option value="$PROJECT_DIR$/relational_sgd/models/node_classification_with_node_features.py" />
-        <option value="$PROJECT_DIR$/relational_sgd/models/skipgram.py" />
         <option value="$PROJECT_DIR$/relational_sgd/data_processing/helpers.py" />
         <option value="$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets/blog_catalog_3.py" />
+        <option value="$PROJECT_DIR$/relational_sgd/data_processing/utils.py" />
+        <option value="$PROJECT_DIR$/scripts/run_wikipedia_links.py" />
+        <option value="$PROJECT_DIR$/relational_sgd/tensorflow_ops/biased_walk_dataset.cpp" />
+        <option value="$PROJECT_DIR$/relational_sgd/models/skipgram.py" />
+        <option value="$PROJECT_DIR$/relational_sgd/models/node_classification_template.py" />
+        <option value="$PROJECT_DIR$/scripts/run_skipgram_simple.py" />
+        <option value="$PROJECT_DIR$/scripts/run_sup_pred_w_features.py" />
+        <option value="$PROJECT_DIR$/relational_sgd/graph_ops/representations.py" />
+        <option value="$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets/homo_sapiens.py" />
         <option value="$PROJECT_DIR$/relational_sgd/data_processing/graph_sage_loader.py" />
+        <option value="$PROJECT_DIR$/scripts/dataset_logic.py" />
+        <option value="$PROJECT_DIR$/relational_sgd/sampling/adapters.py" />
+        <option value="$PROJECT_DIR$/features-scratch/create_dataset.py" />
       </list>
     </option>
   </component>
@@ -232,6 +214,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -242,24 +226,7 @@
             <path>
               <item name="src" type="b2602c69:ProjectViewProjectNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="notebooks" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="src" type="b2602c69:ProjectViewProjectNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="relational_sgd" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="src" type="b2602c69:ProjectViewProjectNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="relational_sgd" type="462c0819:PsiDirectoryNode" />
-              <item name="data_processing" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="src" type="b2602c69:ProjectViewProjectNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="relational_sgd" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
+              <item name="features-dev" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="src" type="b2602c69:ProjectViewProjectNode" />
@@ -270,25 +237,23 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../causal-networks/src" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="last_opened_file_path" value="$USER_HOME$/anaconda3/envs/rerm-dev/bin/python" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/relational_sgd/models" />
-      <recent name="$PROJECT_DIR$/relational_sgd/data_processing" />
-      <recent name="$PROJECT_DIR$/slurm_scripts" />
-      <recent name="$PROJECT_DIR$/scripts" />
-      <recent name="$PROJECT_DIR$/data_processing" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets" />
       <recent name="$PROJECT_DIR$/graph_ops" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/scripts" />
+      <recent name="$PROJECT_DIR$/relational_sgd/models" />
+      <recent name="$PROJECT_DIR$/relational_sgd/data_processing" />
+      <recent name="$PROJECT_DIR$/slurm_scripts" />
+      <recent name="$PROJECT_DIR$/data_processing" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -304,23 +269,6 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.run_skipgram_pp">
-    <configuration name="load_erm_embeddings" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/relational_sgd/data_processing" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="src" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/relational_sgd/data_processing/load_erm_embeddings.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-    </configuration>
     <configuration name="logistic_reg_node2vec" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -378,14 +326,14 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/bin/python" />
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/rerm-dev/bin/python" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="src" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/run_skipgram_simple.py" />
-      <option name="PARAMETERS" value="--data-dir $PROJECT_DIR$/../data/homo_sapiens/homo_sapiens.npz --train-dir $PROJECT_DIR$/../logging/skipgram_pp --max-steps 100000 --global_regularization 1. --global_learning_rate 1. --label-task-weight 1e-30 --sampler biased-walk" />
+      <option name="PARAMETERS" value="--data-dir $PROJECT_DIR$/../data/homo_sapiens/homo_sapiens.npz --train-dir $PROJECT_DIR$/../logging/skipgram_pp --max-steps 100000 --global_regularization 1. --global_learning_rate 1. --label-task-weight 1e-30 --sampler biased-walk --batch-size 10" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
@@ -403,6 +351,23 @@
       <module name="src" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/run_skipgram_simple.py" />
       <option name="PARAMETERS" value="--data-dir $PROJECT_DIR$/../data/wikipedia_word_coocurr/wiki_pos.npz --train-dir $PROJECT_DIR$/../logging/skipgram_pos  --max-steps 100000 --global_regularization 1. --global_learning_rate 1. --label-task-weight 1e-30 --sampler biased-walk --exotic-evaluation" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="skipgram" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/relational_sgd/models" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="src" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/relational_sgd/models/skipgram.py" />
+      <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
@@ -428,17 +393,17 @@
       <item index="1" class="java.lang.String" itemvalue="Python.run_skipgram_wikipos" />
       <item index="2" class="java.lang.String" itemvalue="Python.logistic_reg_node2vec" />
       <item index="3" class="java.lang.String" itemvalue="Python.run_skipgram_bc3" />
-      <item index="4" class="java.lang.String" itemvalue="Python.load_erm_embeddings" />
-      <item index="5" class="java.lang.String" itemvalue="Python.node2vec" />
-      <item index="6" class="java.lang.String" itemvalue="Python.tf_emb_log_reg" />
+      <item index="4" class="java.lang.String" itemvalue="Python.node2vec" />
+      <item index="5" class="java.lang.String" itemvalue="Python.tf_emb_log_reg" />
+      <item index="6" class="java.lang.String" itemvalue="Python.skipgram" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.node2vec" />
-        <item index="1" class="java.lang.String" itemvalue="Python.run_skipgram_bc3" />
-        <item index="2" class="java.lang.String" itemvalue="Python.tf_emb_log_reg" />
-        <item index="3" class="java.lang.String" itemvalue="Python.logistic_reg_node2vec" />
-        <item index="4" class="java.lang.String" itemvalue="Python.load_erm_embeddings" />
+        <item index="0" class="java.lang.String" itemvalue="Python.skipgram" />
+        <item index="1" class="java.lang.String" itemvalue="Python.node2vec" />
+        <item index="2" class="java.lang.String" itemvalue="Python.run_skipgram_bc3" />
+        <item index="3" class="java.lang.String" itemvalue="Python.tf_emb_log_reg" />
+        <item index="4" class="java.lang.String" itemvalue="Python.logistic_reg_node2vec" />
       </list>
     </recent_temporary>
   </component>
@@ -455,41 +420,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1524078251826</updated>
-    </task>
-    <task id="LOCAL-00078" summary="gnarly hack to precompute negative sampling distribution for random walk&#10;&#10;also changed default global optimizer to vanilla sgd w small learning&#10;rate">
-      <created>1525383496956</created>
-      <option name="number" value="00078" />
-      <option name="presentableId" value="LOCAL-00078" />
-      <option name="project" value="LOCAL" />
-      <updated>1525383496956</updated>
-    </task>
-    <task id="LOCAL-00079" summary="commit before pull (starting to implement polyak averaging)">
-      <created>1525449083346</created>
-      <option name="number" value="00079" />
-      <option name="presentableId" value="LOCAL-00079" />
-      <option name="project" value="LOCAL" />
-      <updated>1525449083346</updated>
-    </task>
-    <task id="LOCAL-00080" summary="implemented polyak averaging for label prediction (but it doesn't obv&#10;seem to help much)">
-      <created>1525453108870</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
-      <option name="project" value="LOCAL" />
-      <updated>1525453108870</updated>
-    </task>
-    <task id="LOCAL-00081" summary="fix to polyak averaging">
-      <created>1525455147057</created>
-      <option name="number" value="00081" />
-      <option name="presentableId" value="LOCAL-00081" />
-      <option name="project" value="LOCAL" />
-      <updated>1525455147057</updated>
-    </task>
-    <task id="LOCAL-00082" summary="added an optimizer that preconditions by inverse hessian, but it's&#10;unusuably slow in practice">
-      <created>1525539763516</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
-      <option name="project" value="LOCAL" />
-      <updated>1525539763516</updated>
     </task>
     <task id="LOCAL-00083" summary="remove extra global step update">
       <created>1525557166015</created>
@@ -799,7 +729,42 @@
       <option name="project" value="LOCAL" />
       <updated>1526082328204</updated>
     </task>
-    <option name="localTasksCounter" value="127" />
+    <task id="LOCAL-00127" summary="removing 'labelled_verts' (which became deprecated when batching was&#10;introduced)">
+      <created>1539697822365</created>
+      <option name="number" value="00127" />
+      <option name="presentableId" value="LOCAL-00127" />
+      <option name="project" value="LOCAL" />
+      <updated>1539697822366</updated>
+    </task>
+    <task id="LOCAL-00128" summary="removing some cruft">
+      <created>1539698495700</created>
+      <option name="number" value="00128" />
+      <option name="presentableId" value="LOCAL-00128" />
+      <option name="project" value="LOCAL" />
+      <updated>1539698495700</updated>
+    </task>
+    <task id="LOCAL-00129" summary="Script to load data and process data in graphsage format">
+      <created>1539787338023</created>
+      <option name="number" value="00129" />
+      <option name="presentableId" value="LOCAL-00129" />
+      <option name="project" value="LOCAL" />
+      <updated>1539787338024</updated>
+    </task>
+    <task id="LOCAL-00130" summary="Cleanup">
+      <created>1539787377308</created>
+      <option name="number" value="00130" />
+      <option name="presentableId" value="LOCAL-00130" />
+      <option name="project" value="LOCAL" />
+      <updated>1539787377308</updated>
+    </task>
+    <task id="LOCAL-00131" summary="modifying dataset_logic to handle preprocessed graphsage data">
+      <created>1539788881211</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1539788881211</updated>
+    </task>
+    <option name="localTasksCounter" value="132" />
     <servers />
   </component>
   <component name="TodoView">
@@ -813,13 +778,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="612" y="204" width="2497" height="1452" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32562938" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32852563" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40497193" sideWeight="0.1040033" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3301692" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32798716" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33520448" sideWeight="0.15435411" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3648757" sideWeight="0.8959967" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287891" sideWeight="0.49360296" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33520448" sideWeight="0.59224105" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33520448" sideWeight="0.8456459" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24969047" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39935845" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -836,18 +802,18 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32852563" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32798716" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40497193" sideWeight="0.1040033" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33520448" sideWeight="0.15435411" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3648757" sideWeight="0.8959967" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3648757" sideWeight="0.8959967" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287891" sideWeight="0.49360296" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33520448" sideWeight="0.59224105" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33520448" sideWeight="0.8456459" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32108957" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3301692" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287891" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287891" sideWeight="0.49525383" order="1" side_tool="false" content_ui="tabs" />
@@ -862,11 +828,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="trying cpu sweep of induced samplers (bug appears to be gpu only)" />
-    <MESSAGE value="adding induced walk w negative sampling to the sweep code" />
-    <MESSAGE value="reg+learning rate sweep on full problem (to figure out what's up&#10;with weird different embedding + logreg results)" />
-    <MESSAGE value="sweep on local learning rates for induced subgraph problem&#10;(to avoid NaN issues...)" />
-    <MESSAGE value="script for fresh cpu sweep" />
     <MESSAGE value="experiment w different values of p in p-sampling" />
     <MESSAGE value="added node2vec style scoring" />
     <MESSAGE value="names for node2vec and specified eval" />
@@ -887,47 +848,20 @@
     <MESSAGE value="changed skipgram loss to canonical calculation (that is, double count&#10;positive examples)" />
     <MESSAGE value="undo windowing change" />
     <MESSAGE value="bug &quot;free&quot; (at least, n2v pp replicates as expected)" />
-    <option name="LAST_COMMIT_MESSAGE" value="bug &quot;free&quot; (at least, n2v pp replicates as expected)" />
+    <MESSAGE value="removing 'labelled_verts' (which became deprecated when batching was&#10;introduced)" />
+    <MESSAGE value="removing some cruft" />
+    <MESSAGE value="Script to load data and process data in graphsage format" />
+    <MESSAGE value="Cleanup" />
+    <MESSAGE value="modifying dataset_logic to handle preprocessed graphsage data" />
+    <option name="LAST_COMMIT_MESSAGE" value="modifying dataset_logic to handle preprocessed graphsage data" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="14" />
+      <option name="time" value="15" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/relational_sgd/sampling/biased_walk.py" />
-    <entry file="file://$PROJECT_DIR$/relational_sgd/sampling/sampling.cpp" />
-    <entry file="file://$PROJECT_DIR$/relational_sgd/sampling/sampling.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2976">
-          <caret line="93" column="6" lean-forward="false" selection-start-line="93" selection-start-column="6" selection-end-line="93" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/graph_ops/structure.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/graph_ops/tensorflow.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/sampling/helpers.py" />
-    <entry file="file://$PROJECT_DIR$/relational_sgd/sampling/p_sampling.py" />
-    <entry file="file://$PROJECT_DIR$/relational_sgd/graph_ops/representations.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/relational_sgd/tensorflow_ops/adapter_ops.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-393">
@@ -980,13 +914,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/dataset_logic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="13" column="10" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/python/data/ops/dataset_ops.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30176">
@@ -999,20 +926,6 @@
     <entry file="file://$PROJECT_DIR$/slurm_scripts/emayhem_run_skipgram_cpu.sh" />
     <entry file="file://$PROJECT_DIR$/slurm_scripts/node2vec_sweep_cpu.sh" />
     <entry file="file://$PROJECT_DIR$/slurm_scripts/skipgram_submit_janice.sh" />
-    <entry file="file://$PROJECT_DIR$/scripts/run_wikipedia_links.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1120">
-          <caret line="46" column="37" lean-forward="true" selection-start-line="46" selection-start-column="37" selection-end-line="46" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/sampling/factories.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6784">
-          <caret line="217" column="32" lean-forward="false" selection-start-line="217" selection-start-column="32" selection-end-line="217" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/node2vec.py" />
     <entry file="file://$PROJECT_DIR$/models/logistic_reg_node2vec.py" />
     <entry file="file://$PROJECT_DIR$/slurm_scripts/skipgram_submit_cpu.sh" />
@@ -1034,44 +947,79 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/models/label_clustering.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2718">
-          <caret line="139" column="0" lean-forward="false" selection-start-line="139" selection-start-column="0" selection-end-line="139" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/run_skipgram_simple.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2272">
-          <caret line="79" column="30" lean-forward="false" selection-start-line="79" selection-start-column="30" selection-end-line="79" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/sampling/adapters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="10944">
-          <caret line="347" column="0" lean-forward="false" selection-start-line="347" selection-start-column="0" selection-end-line="347" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/pokec.py">
+    <entry file="file://$PROJECT_DIR$/relational_sgd/models/node_classification_with_node_features.py" />
+    <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets/wikipedia_word_cooccurr.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/models/toy_model.py">
+    <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/helpers.py" />
+    <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/models/node_classification_with_node_features.py" />
+    <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/utils.py" />
+    <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets/blog_catalog_3.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-587">
+          <caret line="17" column="12" lean-forward="true" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/relational_sgd/models/label_clustering.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4352">
+          <caret line="139" column="0" lean-forward="false" selection-start-line="139" selection-start-column="0" selection-end-line="139" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/pokec.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="89" column="26" lean-forward="false" selection-start-line="89" selection-start-column="26" selection-end-line="89" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/sklearn_logistic_regression.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1641">
+          <caret line="15" column="78" lean-forward="false" selection-start-line="15" selection-start-column="78" selection-end-line="15" selection-end-column="78" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/run_wikipedia_links.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/envs/rerm-dev/lib/python3.6/site-packages/tensorflow/python/data/ops/dataset_ops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="992">
+          <caret line="1926" column="0" lean-forward="true" selection-start-line="1926" selection-start-column="0" selection-end-line="1926" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/relational_sgd/tensorflow_ops/biased_walk_dataset.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1149">
+          <caret line="352" column="1" lean-forward="false" selection-start-line="352" selection-start-column="1" selection-end-line="352" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/envs/rerm-dev/lib/python3.6/site-packages/tensorflow/python/client/session.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-11">
+          <caret line="1307" column="0" lean-forward="false" selection-start-line="1307" selection-start-column="0" selection-end-line="1307" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/notebooks/Skipgram-Demo.ipynb">
       <provider selected="true" editor-type-id="ipnb-editor">
         <state>
@@ -1081,81 +1029,97 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/relational_sgd/models/node_classification_template.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6624">
-          <caret line="209" column="22" lean-forward="false" selection-start-line="209" selection-start-column="22" selection-end-line="209" selection-end-column="22" />
-          <folding />
+        <state relative-caret-position="235">
+          <caret line="284" column="63" lean-forward="false" selection-start-line="284" selection-start-column="63" selection-end-line="284" selection-end-column="63" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/relational_sgd/models/toy_model.py" />
     <entry file="file://$PROJECT_DIR$/relational_sgd/models/skipgram.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3168">
-          <caret line="102" column="39" lean-forward="false" selection-start-line="102" selection-start-column="39" selection-end-line="102" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="190">
+          <caret line="141" column="9" lean-forward="false" selection-start-line="141" selection-start-column="9" selection-end-line="141" selection-end-column="9" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets/wikipedia_word_cooccurr.py">
+    <entry file="file://$PROJECT_DIR$/scripts/run_skipgram_simple.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="374">
+          <caret line="130" column="0" lean-forward="false" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets/homo_sapiens.py">
+    <entry file="file://$PROJECT_DIR$/scripts/run_sup_pred_w_features.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="12" column="50" lean-forward="false" selection-start-line="12" selection-start-column="50" selection-end-line="12" selection-end-column="50" />
-          <folding />
+        <state relative-caret-position="404">
+          <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/helpers.py">
+    <entry file="file://$PROJECT_DIR$/relational_sgd/sampling/factories.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+        <state relative-caret-position="-6025">
+          <caret line="104" column="23" lean-forward="false" selection-start-line="104" selection-start-column="23" selection-end-line="104" selection-end-column="23" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/wikipedia_hyperlink.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="9" selection-end-column="3" />
-          <folding>
-            <element signature="e#190#199#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="640">
+          <caret line="79" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets/homo_sapiens.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="672">
+          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="26" selection-end-column="44" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/graph_sage_loader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="17" column="23" lean-forward="false" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
-          <folding>
-            <element signature="e#234#252#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="4256">
+          <caret line="141" column="20" lean-forward="false" selection-start-line="141" selection-start-column="20" selection-end-line="141" selection-end-column="20" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/relational_sgd/data_processing/node2vec-datasets/blog_catalog_3.py">
+    <entry file="file://$PROJECT_DIR$/relational_sgd/graph_ops/representations.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="576">
-          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+        <state relative-caret-position="416">
+          <caret line="13" column="27" lean-forward="false" selection-start-line="13" selection-start-column="21" selection-end-line="13" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/relational_sgd/sampling/adapters.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1237">
+          <caret line="538" column="0" lean-forward="true" selection-start-line="504" selection-start-column="0" selection-end-line="538" selection-end-column="0" />
           <folding>
-            <element signature="e#110#129#0" expanded="true" />
+            <element signature="e#574#592#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/dataset_logic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-608">
+          <caret line="108" column="0" lean-forward="true" selection-start-line="106" selection-start-column="0" selection-end-line="108" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/features-dev/create_dataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="11" column="22" lean-forward="false" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
+          <folding />
         </state>
       </provider>
     </entry>
