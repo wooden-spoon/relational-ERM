@@ -46,25 +46,25 @@ class BuildExtCustom(build_ext):
 
 
 extensions_tensorflow = [
-    TensorflowExtension('relational_sgd.tensorflow_ops._datasets_tensorflow',
-                        ['relational_sgd/tensorflow_ops/biased_walk_dataset.cpp',
-                         'relational_sgd/tensorflow_ops/p_sampling_dataset.cpp',
-                         'relational_sgd/tensorflow_ops/uniform_edge_dataset.cpp',
-                         'relational_sgd/tensorflow_ops/random_walk_dataset.cpp']),
-    TensorflowExtension('relational_sgd.tensorflow_ops._adapters_tensorflow',
-                        ['relational_sgd/tensorflow_ops/adjacency_to_edge_list.cpp',
-                         'relational_sgd/tensorflow_ops/induced_subgraph.cpp',
-                         'relational_sgd/tensorflow_ops/induced_ego_sample.cpp',
-                         'relational_sgd/tensorflow_ops/concatenate_slices.cpp']),
-    TensorflowExtension('relational_sgd.tensorflow_ops._array_ops_tensorflow',
-                        ['relational_sgd/tensorflow_ops/concatenate_slices.cpp',
-                         'relational_sgd/tensorflow_ops/packed_to_sparse.cpp',
-                         'relational_sgd/tensorflow_ops/repeat.cpp',
-                         'relational_sgd/tensorflow_ops/batch_length_to_segment.cpp'])
+    TensorflowExtension('relational_erm.tensorflow_ops._datasets_tensorflow',
+                        ['relational_erm/tensorflow_ops/biased_walk_dataset.cpp',
+                         'relational_erm/tensorflow_ops/p_sampling_dataset.cpp',
+                         'relational_erm/tensorflow_ops/uniform_edge_dataset.cpp',
+                         'relational_erm/tensorflow_ops/random_walk_dataset.cpp']),
+    TensorflowExtension('relational_erm.tensorflow_ops._adapters_tensorflow',
+                        ['relational_erm/tensorflow_ops/adjacency_to_edge_list.cpp',
+                         'relational_erm/tensorflow_ops/induced_subgraph.cpp',
+                         'relational_erm/tensorflow_ops/induced_ego_sample.cpp',
+                         'relational_erm/tensorflow_ops/concatenate_slices.cpp']),
+    TensorflowExtension('relational_erm.tensorflow_ops._array_ops_tensorflow',
+                        ['relational_erm/tensorflow_ops/concatenate_slices.cpp',
+                         'relational_erm/tensorflow_ops/packed_to_sparse.cpp',
+                         'relational_erm/tensorflow_ops/repeat.cpp',
+                         'relational_erm/tensorflow_ops/batch_length_to_segment.cpp'])
 ]
 
 setup(
-    name='relational_sgd',
+    name='relational_erm',
     version='0.1.0',
     author='Victor Veitch and Wenda Zhou',
     author_email='wz2335@columbia.edu',

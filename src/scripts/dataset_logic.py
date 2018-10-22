@@ -5,8 +5,8 @@ import tensorflow as tf
 
 from collections import namedtuple
 
-from relational_sgd.graph_ops.representations import create_packed_adjacency_list, edge_list_to_adj_list
-from relational_sgd.graph_ops.representations import PackedAdjacencyList
+from relational_erm.graph_ops.representations import create_packed_adjacency_list, edge_list_to_adj_list
+from relational_erm.graph_ops.representations import PackedAdjacencyList
 
 GraphDataGS = namedtuple('GraphDataGS', ['edge_list',
                                          'node_features',
@@ -18,7 +18,7 @@ GraphDataGS = namedtuple('GraphDataGS', ['edge_list',
 def load_data_graphsage(data_path=None):
     """
     Loads preprocessed data stores as .npz with keys
-    ['edge_list', 'weights', 'features', 'classes', 'node_ids', 'neighbours', 'lengths']
+    ['edge_list', 'features', 'classes', 'node_ids', 'neighbours', 'lengths']
 
     'features' is a real-valued array of shape [n_vert, feature_dimension] giving
     some (embedding of) features for each vertex

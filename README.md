@@ -14,6 +14,8 @@ python setup.py build_ext --inplace
 # DEMO #
 We provide a tutorial ipython notebook in notebooks/Skipgram-Demo.ipynb. It is recommended to start here.
 
+The package node\_classification\_with\_features provides a fuller demo. 
+It is intended as reference for implementing new relational ERM models.
 
 # EXPERIMENTS #
 We now describe how to reproduce the experiments in the paper. 

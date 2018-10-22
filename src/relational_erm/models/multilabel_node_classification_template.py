@@ -175,14 +175,11 @@ def _make_polyak_averaging(embeddings, features, label_logits, mode, polyak, mak
 def _make_embedding_variable(params):
     embedding_variable_name = 'input_layer/vertex_index_embedding/embedding_weights'
 
-    regularizer = tf.contrib.layers.l2_regularizer(scale=0.0)
-
     all_embeddings = tf.get_variable(
         embedding_variable_name,
         shape=[params['num_vertices'], params['embedding_dim']],
         dtype=tf.float32,
         initializer=tf.truncated_normal_initializer(stddev=1 / params['embedding_dim']),
-        # regularizer=regularizer,
         trainable=params.get('embedding_trainable', True))
     if params.get('embedding_checkpoint', None) is not None:
         tf.train.init_from_checkpoint(

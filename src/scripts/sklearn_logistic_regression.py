@@ -13,7 +13,7 @@ from sklearn.metrics import f1_score
 import tensorflow as tf
 
 from models.scoring import TopKRanker
-from relational_sgd.data_processing.load_erm_embeddings import process_erm_emb
+from relational_erm.data_processing.load_erm_embeddings import process_erm_emb
 
 
 def logistic_reg(embeddings, labels, seed):

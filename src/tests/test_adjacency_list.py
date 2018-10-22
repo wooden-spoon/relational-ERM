@@ -2,8 +2,8 @@ import os
 import numpy as np
 import tensorflow as tf
 
-from relational_sgd.graph_ops.representations import edge_list_to_adj_list, create_packed_adjacency_list
-from relational_sgd.tensorflow_ops import adapter_ops as ops
+from relational_erm.graph_ops.representations import edge_list_to_adj_list, create_packed_adjacency_list
+from relational_erm.tensorflow_ops import adapter_ops as ops
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 

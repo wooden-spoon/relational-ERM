@@ -5,11 +5,11 @@ import argparse
 import tensorflow as tf
 import numpy as np
 
-from relational_sgd.sampling import adapters, factories
+from relational_erm.sampling import adapters, factories
 
 from scripts.dataset_logic import load_data_node2vec
 
-from relational_sgd.models.skipgram import make_multilabel_logistic_regression
+from relational_erm.models.skipgram import make_multilabel_logistic_regression
 
 
 def parse_arguments(parser=None):

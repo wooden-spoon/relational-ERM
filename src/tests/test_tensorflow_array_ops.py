@@ -2,7 +2,7 @@ import os
 import numpy as np
 import tensorflow as tf
 
-import relational_sgd.tensorflow_ops.array_ops as array_ops
+import relational_erm.tensorflow_ops.array_ops as array_ops
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 

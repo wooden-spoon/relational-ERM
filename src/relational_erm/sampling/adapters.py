@@ -17,9 +17,9 @@ labels: the labels associated with each labelled vertex.
 import numpy as np
 import tensorflow as tf
 
-import relational_sgd.tensorflow_ops.array_ops
-from relational_sgd.tensorflow_ops import adapter_ops as tensorflow_adapters, array_ops
-from relational_sgd.graph_ops import representations
+import relational_erm.tensorflow_ops.array_ops
+from relational_erm.tensorflow_ops import adapter_ops as tensorflow_adapters, array_ops
+from relational_erm.graph_ops import representations
 
 try:
     import mkl_random as random
@@ -387,7 +387,7 @@ def append_packed_vertex_labels(packed_labels, lengths, offsets=None):
 
         subset_lengths = tf.gather(lengths, vertex_index)
 
-        vertex_labels = relational_sgd.tensorflow_ops.array_ops.concatenate_slices(
+        vertex_labels = relational_erm.tensorflow_ops.array_ops.concatenate_slices(
             packed_labels,
             tf.gather(offsets, vertex_index),
             subset_lengths)
@@ -401,22 +401,15 @@ def append_packed_vertex_labels(packed_labels, lengths, offsets=None):
     return fn
 
 
-def append_vertex_classes(classes):
-    """ Adapts an existing sampler to append classes, 1-hot encoded.
-
-    This function adapts the given sampler by 1-hot encoding the vertex classes and appending these as "labels".
+def append_sparse_vertex_classes(classes):
+    """ Adapts an existing sampler to append classes
 
     Parameters
     ----------
     classes: the labels for each vertex.
     """
 
-    num_classes = classes.max()+1
-
     def fn(data):
-        if 'labels' in data:
-            raise Exception("labels already defined when append_vertex_classes called")
-
         vertex_index = data['vertex_index']
 
         if isinstance(vertex_index, tf.Tensor):
@@ -424,9 +417,7 @@ def append_vertex_classes(classes):
         else:
             sample_classes = classes[vertex_index]
 
-        sample_labels = tf.one_hot(sample_classes, depth=num_classes)
-
-        return {**data, 'labels': sample_labels}
+        return {**data, 'classes': sample_classes}
 
     return fn
 
@@ -472,7 +463,8 @@ def format_features_labels():
 
     label_keys = [
         'labels', 'split',
-        'packed_labels', 'packed_labels_lengths', 'packed_labels_indices']
+        'packed_labels', 'packed_labels_lengths', 'packed_labels_indices',
+        'classes']
 
     def fn(data):
         features = {k: v for k, v in data.items() if k in feature_keys}
@@ -529,6 +521,8 @@ def padded_batch_samples(batch_size):
             # packed labels
             label_pad_values['packed_labels'] = 0
             label_pad_values['packed_labels_lengths'] = 0
+        elif 'classes' in dataset.output_shapes[1]:
+            label_pad_values['classes'] = 0
 
         return dataset.padded_batch(
             batch_size, dataset.output_shapes,

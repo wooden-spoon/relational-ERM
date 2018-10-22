@@ -8,7 +8,7 @@ strategy to produce a set of positive and negative examples (edges).
 import tensorflow as tf
 import numpy as np
 
-import relational_sgd.sampling.negative_sampling as negative_sampling
+import relational_erm.sampling.negative_sampling as negative_sampling
 from . import adapters
 from ..tensorflow_ops import adapter_ops, dataset_ops
 

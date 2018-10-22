@@ -5,16 +5,15 @@ These are datasets with node labels and attributes
 
 code adapted from https://github.com/williamleif/GraphSAGE/blob/master/graphsage/utils.py
 """
+import argparse
 
 import numpy as np
-import random
 import json
-import sys
 import os
-import sklearn
 
 import networkx as nx
 from networkx.readwrite import json_graph
+
 version_info = list(map(int, nx.__version__.split('.')))
 major = version_info[0]
 minor = version_info[1]
@@ -22,6 +21,10 @@ assert (major <= 1) and (minor <= 11), "networkx major version > 1.11"
 
 
 def graphsage_load_data(prefix, normalize=True):
+
+    if prefix is None:
+        prefix = "../data/reddit/reddit"
+
     G_data = json.load(open(prefix + "-G.json"))
     G = json_graph.node_link_graph(G_data)
     if isinstance(G.nodes()[0], int):
@@ -143,13 +146,16 @@ def _preprocess_packed_adjacency_list(data):
     }
 
 
-
 def main():
-    graphsage_data = graphsage_load_data("../data/reddit/reddit")
-    # graphsage_data = graphsage_load_data("../data/ppi/ppi")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data-dir', type=str, default=None)
+    args = parser.parse_args()
+
+    graphsage_data = graphsage_load_data(args.data_dir)
     data = _process_graphsage_data(graphsage_data)
     data = _preprocess_packed_adjacency_list(data)
     np.savez_compressed('reddit.npz', **data)
+
 
 if __name__ == '__main__':
     main()

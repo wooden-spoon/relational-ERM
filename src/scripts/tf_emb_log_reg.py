@@ -8,11 +8,11 @@ import os
 import tensorflow as tf
 import numpy as np
 
-from relational_sgd.sampling import adapters, factories
+from relational_erm.sampling import adapters, factories
 
 from scripts.dataset_logic import load_data_node2vec
 
-from relational_sgd.models.skipgram import make_multilabel_logistic_regression
+from relational_erm.models.skipgram import make_multilabel_logistic_regression
 import scripts.run_skipgram_simple
 from scripts.run_skipgram_simple import get_dataset_fn, make_input_fn, _adjust_learning_rate, _adjust_regularization
 
