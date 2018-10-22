@@ -10,7 +10,7 @@ import scipy.io
 import os
 import numpy as np
 import networkx as nx
-from relational_sgd.graph_ops.representations import relabel
+from relational_erm.graph_ops.representations import relabel
 
 
 def main():

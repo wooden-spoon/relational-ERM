@@ -4,7 +4,7 @@ import tensorflow as tf
 
 
 def oracle_predictions(labels, logits, name=None):
-    """ Compute the predictions from the given logits where the threshold in
+    """ Compute the predictions from the given logits where the threshold is
     chosen in an oracle fashion based on the true labels.
 
     Parameters

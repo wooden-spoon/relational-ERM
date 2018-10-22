@@ -1,7 +1,5 @@
 import tensorflow as tf
-import numpy as np
-from relational_sgd.graph_ops.tensorflow import edge_list_to_adj_mat
-from relational_sgd.models.node_classification_template import make_node_classifier
+from relational_erm.models.multilabel_node_classification_template import make_node_classifier
 
 
 def make_skipgram():
@@ -83,41 +81,6 @@ def make_multilabel_deep_logistic_regression():
                                 make_edge_pred_loss=make_simple_skipgram_loss(12))
 
 
-def make_multilabel_prediction_with_features(label_task_weight=0.001, regularization=0., clip=None, **kwargs):
-    """ Uses the skipgram objective for relational data,
-    and vertices features that are real-valued vectors
-
-    Parameters
-    ----------
-    label_task_weight: the weight for the label task (between 0 and 1). Default 0.001
-    clip: if not None, the value to clip the edge loss at.
-    kwargs: additional arguments are forwarded to the `make_node_classifier` template.
-
-    Returns
-    -------
-    A model function for simple multilabel logistic regression.
-    """
-
-    def make_label_logits(embeddings, features, mode, params):
-        # actually computes 0.5 * \sum w^2, so it should just reproduce sklearn
-        regularizer = tf.contrib.layers.l2_regularizer(scale=label_task_weight * regularization)
-
-        layer = tf.layers.dense(
-            embeddings, params['n_labels'], activation=None, use_bias=True,
-            kernel_regularizer=regularizer,
-            bias_regularizer=regularizer,
-            name='logits_labels')
-
-        return layer
-
-    edge_task_weight = 1 - label_task_weight
-
-    return make_node_classifier(
-        make_label_logits=make_label_logits,
-        make_edge_logits=_make_edge_list_logits,
-        make_label_pred_loss=make_weighted_loss(_make_label_sigmoid_cross_entropy_loss, label_task_weight),
-        make_edge_pred_loss=make_weighted_loss(make_simple_skipgram_loss(clip), edge_task_weight),
-        **kwargs)
 
 #
 # helper functions follow

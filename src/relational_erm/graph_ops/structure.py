@@ -1,4 +1,4 @@
-from relational_sgd.graph_ops.representations import edge_list_to_adj_list, redundant_edge_list_to_adj_list
+from relational_erm.graph_ops.representations import edge_list_to_adj_list, redundant_edge_list_to_adj_list
 import networkx as nx
 import numpy as np
 import scipy as sp

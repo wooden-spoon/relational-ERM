@@ -1,15 +1,13 @@
-
-
 import tensorflow as tf
 import numpy as np
 import collections
 
 from tensorflow.contrib.training import HParams
 
-import relational_sgd.sampling.negative_sampling
-from relational_sgd.tensorflow_ops.dataset_ops import RandomWalkDataset
-from relational_sgd.sampling import adapters
-from relational_sgd.models import label_clustering
+import relational_erm.sampling.negative_sampling
+from relational_erm.tensorflow_ops.dataset_ops import RandomWalkDataset
+from relational_erm.sampling import adapters
+from relational_erm.models import label_clustering
 
 from .dataset_logic import load_data_wikipedia_hyperlink
 
@@ -45,7 +43,7 @@ def make_input_fn(adjacency_list, packed_labels, dataset_shards=None):
                                     sloppy=True))
 
         window = adapters.adapt_random_walk_window(params.window_size)
-        add_negative_samples = relational_sgd.sampling.negative_sampling.add_negative_sample(
+        add_negative_samples = relational_erm.sampling.negative_sampling.add_negative_sample(
             num_vertex, params.num_negative, seed=params.seed)
 
         processing_fn = adapters.compose(

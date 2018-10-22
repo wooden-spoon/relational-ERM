@@ -1,10 +1,10 @@
 import os
 import pytest
 
-import relational_sgd.tensorflow_ops.array_ops
-from relational_sgd.graph_ops.representations import edge_list_to_adj_list, create_packed_adjacency_list
-from relational_sgd.tensorflow_ops import dataset_ops as ops
-from relational_sgd.tensorflow_ops import adapter_ops
+import relational_erm.tensorflow_ops.array_ops
+from relational_erm.graph_ops.representations import edge_list_to_adj_list, create_packed_adjacency_list
+from relational_erm.tensorflow_ops import dataset_ops as ops
+from relational_erm.tensorflow_ops import adapter_ops
 import numpy as np
 import tensorflow as tf
 

@@ -8,7 +8,7 @@ strategy to produce a set of positive and negative examples (edges).
 import tensorflow as tf
 import numpy as np
 
-import relational_sgd.sampling.negative_sampling as negative_sampling
+import relational_erm.sampling.negative_sampling as negative_sampling
 from . import adapters
 from ..tensorflow_ops import adapter_ops, dataset_ops
 
@@ -222,7 +222,7 @@ def make_biased_walk_induced_dataset(args):
 
         dataset = dataset.map(
             adapters.compose(
-                adapters.adapt_randow_walk_induced(neighbours, lengths, offsets),
+                adapters.adapt_random_walk_induced(neighbours, lengths, offsets),
                 adapters.adapt_packed_subgraph_posneg(args.num_negative)
             ),
             num_parallel_calls=args.dataset_shards)
@@ -249,7 +249,7 @@ def make_biased_walk_induced_pos_dataset(args):
 
         dataset = dataset.map(
             adapters.compose(
-                adapters.adapt_randow_walk_induced(neighbours, lengths, offsets),
+                adapters.adapt_random_walk_induced(neighbours, lengths, offsets),
                 adapters.adapt_packed_subgraph(),
                 add_negative_sample
             ),

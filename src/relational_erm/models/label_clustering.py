@@ -4,7 +4,7 @@
 
 import tensorflow as tf
 
-from relational_sgd.tensorflow_ops import array_ops
+from relational_erm.tensorflow_ops import array_ops
 from . import metrics
 
 

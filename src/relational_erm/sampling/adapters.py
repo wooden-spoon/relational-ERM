@@ -10,8 +10,6 @@ vertex_index: a 1-dimensional tensor, mapping the vertex indices in the current
     subsample to indices in the entire graph.
 
 For labels
-labels_indices: a 1-dimensional tensor representing the index of the vertices that are
-    labelled.
 labels: the labels associated with each labelled vertex.
 
 """
@@ -19,9 +17,9 @@ labels: the labels associated with each labelled vertex.
 import numpy as np
 import tensorflow as tf
 
-import relational_sgd.tensorflow_ops.array_ops
-from relational_sgd.tensorflow_ops import adapter_ops as tensorflow_adapters, array_ops
-from relational_sgd.graph_ops import representations
+import relational_erm.tensorflow_ops.array_ops
+from relational_erm.tensorflow_ops import adapter_ops as tensorflow_adapters, array_ops
+from relational_erm.graph_ops import representations
 
 try:
     import mkl_random as random
@@ -169,7 +167,7 @@ def adapt_random_walk_window(window_size):
     return fn
 
 
-def adapt_randow_walk_induced(neighbours, lengths, offsets, name=None):
+def adapt_random_walk_induced(neighbours, lengths, offsets, name=None):
     """ Adapts a random walk to produce the induced subgraph.
 
     Parameters
@@ -357,12 +355,10 @@ def append_vertex_labels(labels):
 
         if isinstance(vertex_index, tf.Tensor):
             sample_labels = tf.gather(labels, vertex_index, axis=0)
-            labels_index = tf.range(tf.shape(sample_labels)[0])
         else:
             sample_labels = labels[vertex_index, :]
-            labels_index = np.arange(sample_labels.shape[0])
 
-        return {**data, 'labels': sample_labels, 'label_index': labels_index}
+        return {**data, 'labels': sample_labels}
 
     return fn
 
@@ -391,7 +387,7 @@ def append_packed_vertex_labels(packed_labels, lengths, offsets=None):
 
         subset_lengths = tf.gather(lengths, vertex_index)
 
-        vertex_labels = relational_sgd.tensorflow_ops.array_ops.concatenate_slices(
+        vertex_labels = relational_erm.tensorflow_ops.array_ops.concatenate_slices(
             packed_labels,
             tf.gather(offsets, vertex_index),
             subset_lengths)
@@ -403,6 +399,28 @@ def append_packed_vertex_labels(packed_labels, lengths, offsets=None):
         }
 
     return fn
+
+
+def append_sparse_vertex_classes(classes):
+    """ Adapts an existing sampler to append classes
+
+    Parameters
+    ----------
+    classes: the labels for each vertex.
+    """
+
+    def fn(data):
+        vertex_index = data['vertex_index']
+
+        if isinstance(vertex_index, tf.Tensor):
+            sample_classes = tf.gather(classes, vertex_index)
+        else:
+            sample_classes = classes[vertex_index]
+
+        return {**data, 'classes': sample_classes}
+
+    return fn
+
 
 
 def append_vertex_vector_features(vector_features):
@@ -420,13 +438,11 @@ def append_vertex_vector_features(vector_features):
         vertex_index = data['vertex_index']
 
         if isinstance(vertex_index, tf.Tensor):
-            sample_labels = tf.gather(vector_features, vertex_index, axis=0)
-            labels_index = tf.range(tf.shape(sample_labels)[0])
+            sample_features = tf.gather(vector_features, vertex_index, axis=0)
         else:
-            sample_labels = vector_features[vertex_index, :]
-            labels_index = np.arange(sample_labels.shape[0])
+            sample_features = vector_features[vertex_index, :]
 
-        return {**data, 'labels': sample_labels, 'label_index': labels_index}
+        return {**data, 'vertex_features': sample_features}
 
     return fn
 
@@ -443,11 +459,12 @@ def format_features_labels():
     """
 
     feature_keys = [
-        'edge_list', 'weights', 'vertex_index', 'num_edges', 'num_vertex', 'is_positive']
+        'edge_list', 'weights', 'vertex_index', 'num_edges', 'num_vertex', 'is_positive', 'vertex_features']
 
     label_keys = [
-        'label_index', 'labels', 'split',
-        'packed_labels', 'packed_labels_lengths', 'packed_labels_indices']
+        'labels', 'split',
+        'packed_labels', 'packed_labels_lengths', 'packed_labels_indices',
+        'classes']
 
     def fn(data):
         features = {k: v for k, v in data.items() if k in feature_keys}
@@ -488,6 +505,9 @@ def padded_batch_samples(batch_size):
     }
 
     def fn(dataset):
+        if 'vertex_features' in dataset.output_shapes[0]:
+            feature_pad_values['vertex_features'] = 0.0
+
         label_pad_values = {
         }
 
@@ -496,12 +516,13 @@ def padded_batch_samples(batch_size):
 
         if 'labels' in dataset.output_shapes[1]:
             # dense labels
-            label_pad_values['label_index'] = 0
             label_pad_values['labels'] = 0.0
         elif 'packed_labels' in dataset.output_shapes[1]:
             # packed labels
             label_pad_values['packed_labels'] = 0
             label_pad_values['packed_labels_lengths'] = 0
+        elif 'classes' in dataset.output_shapes[1]:
+            label_pad_values['classes'] = 0
 
         return dataset.padded_batch(
             batch_size, dataset.output_shapes,
