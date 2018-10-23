@@ -113,12 +113,41 @@ def get_negative_sample(graph_data, args, seed=None, unigram_distribution=None):
     return add_negative_sample
 
 
+def tensorboard_hack(graph_data):
+    """
+    When graph_data is used to construct a dataset the contents get stored as a constant tensor.
+    This is stupid, and causes tensorboard to shit itself.
+    This function is a hack to prevent this behaviour.
+
+    Returns: neighbours, lengths, offsets
+
+    remark: could alternatively define a variable for each array and assign to this variable
+    """
+
+    def _constant_hidden_value(value, name):
+        return tf.py_func(
+            lambda: value,
+            [], tf.int32, stateful=False,
+            name=name)
+
+    adjacency_list = graph_data.adjacency_list
+
+    neighbours = _constant_hidden_value(adjacency_list.neighbours, 'create_neighbours')
+    lengths = _constant_hidden_value(adjacency_list.lengths, 'create_lengths')
+    offsets = _constant_hidden_value(adjacency_list.offsets, 'create_offsets')
+
+    return neighbours, lengths, offsets
+
+
 def make_biased_random_walk_dataset(args):
     """ DeepWalk-style random walk dataset, with unigram negative samples. """
     def dataset_fn(graph_data, seed):
-        neighbours = tf.constant(graph_data.adjacency_list.neighbours, dtype=tf.int32)
-        lengths = tf.constant(graph_data.adjacency_list.lengths, dtype=tf.int32)
-        offsets = tf.constant(graph_data.adjacency_list.offsets, dtype=tf.int32)
+        # adjacency_list = graph_data.adjacency_list
+        # neighbours = tf.constant(adjacency_list.neighbours, dtype=tf.int32)
+        # lengths = tf.constant(adjacency_list.lengths, dtype=tf.int32)
+        # offsets = tf.constant(adjacency_list.offsets, dtype=tf.int32)
+
+        neighbours, lengths, offsets = tensorboard_hack(graph_data)
 
         def _fn(s):
             return dataset_ops.RandomWalkDataset(
@@ -144,9 +173,7 @@ def make_biased_random_walk_dataset(args):
 def make_psample_negative_dataset(args):
     """ P-sampled dataset, with unigram negative samples. """
     def dataset_fn(graph_data, seed):
-        neighbours = tf.constant(graph_data.adjacency_list.neighbours, dtype=tf.int32)
-        lengths = tf.constant(graph_data.adjacency_list.lengths, dtype=tf.int32)
-        offsets = tf.constant(graph_data.adjacency_list.offsets, dtype=tf.int32)
+        neighbours, lengths, offsets = tensorboard_hack(graph_data)
 
         def _fn(s):
             return dataset_ops.PSamplingDataset(
@@ -170,9 +197,7 @@ def make_psample_negative_dataset(args):
 def make_uniform_edge_dataset(args):
     """ Uniform edge-sampled dataset. """
     def dataset_fn(graph_data, seed):
-        neighbours = tf.constant(graph_data.adjacency_list.neighbours, dtype=tf.int32)
-        lengths = tf.constant(graph_data.adjacency_list.lengths, dtype=tf.int32)
-        offsets = tf.constant(graph_data.adjacency_list.offsets, dtype=tf.int32)
+        neighbours, lengths, offsets = tensorboard_hack(graph_data)
 
         def _fn(s):
             return dataset_ops.UniformEdgeDataset(
@@ -188,9 +213,7 @@ def make_uniform_edge_dataset(args):
 def make_psample_induced_dataset(args):
     """ P-sampled dataset, with subsampled negative edges from induced subgraph. """
     def dataset_fn(graph_data, seed):
-        neighbours = tf.constant(graph_data.adjacency_list.neighbours, dtype=tf.int32)
-        lengths = tf.constant(graph_data.adjacency_list.lengths, dtype=tf.int32)
-        offsets = tf.constant(graph_data.adjacency_list.offsets, dtype=tf.int32)
+        neighbours, lengths, offsets = tensorboard_hack(graph_data)
 
         def _fn(s):
             return dataset_ops.PSamplingDataset(args.num_edges, neighbours, lengths, offsets, seed=s)
@@ -209,9 +232,7 @@ def make_psample_induced_dataset(args):
 def make_biased_walk_induced_dataset(args):
     """ Deepwalk-style dataset, with subsampled negative edges from the induced subgraph. """
     def dataset_fn(graph_data, seed):
-        neighbours = tf.constant(graph_data.adjacency_list.neighbours, dtype=tf.int32)
-        lengths = tf.constant(graph_data.adjacency_list.lengths, dtype=tf.int32)
-        offsets = tf.constant(graph_data.adjacency_list.offsets, dtype=tf.int32)
+        neighbours, lengths, offsets = tensorboard_hack(graph_data)
 
         def _fn(s):
             return dataset_ops.RandomWalkDataset(
@@ -235,9 +256,7 @@ def make_biased_walk_induced_dataset(args):
 def make_biased_walk_induced_pos_dataset(args):
     """ Deepwalk-style dataset, with positive edges from induced subgraph and uniform negative edges """
     def dataset_fn(graph_data, seed):
-        neighbours = tf.constant(graph_data.adjacency_list.neighbours, dtype=tf.int32)
-        lengths = tf.constant(graph_data.adjacency_list.lengths, dtype=tf.int32)
-        offsets = tf.constant(graph_data.adjacency_list.offsets, dtype=tf.int32)
+        neighbours, lengths, offsets = tensorboard_hack(graph_data)
 
         def _fn(s):
             return dataset_ops.RandomWalkDataset(

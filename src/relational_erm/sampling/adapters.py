@@ -409,18 +409,27 @@ def append_sparse_vertex_classes(classes):
     classes: the labels for each vertex.
     """
 
+    # hack to stop tensorflow from storing the full array in the graph def
+    def _make_hidden_constant(value, name):
+        return tf.py_func(
+            lambda: value,
+            [], tf.int32, stateful=False,
+            name=name)
+
+    all_node_classes = _make_hidden_constant(classes, "make_all_node_classes")
+    all_node_classes.set_shape(classes.shape)
+
     def fn(data):
         vertex_index = data['vertex_index']
 
         if isinstance(vertex_index, tf.Tensor):
-            sample_classes = tf.gather(classes, vertex_index)
+            sample_classes = tf.gather(all_node_classes, vertex_index)
         else:
-            sample_classes = classes[vertex_index]
+            sample_classes = all_node_classes[vertex_index]
 
         return {**data, 'classes': sample_classes}
 
     return fn
-
 
 
 def append_vertex_vector_features(vector_features):
@@ -433,14 +442,23 @@ def append_vertex_vector_features(vector_features):
     ----------
     vector_features: the features for all vertices.
     """
+    # hack to stop tensorflow from storing the full array in the graph def
+    def _make_features_hidden_constant(value, name):
+        return tf.py_func(
+            lambda: value,
+            [], tf.float32, stateful=False,
+            name=name)
+
+    all_node_features = _make_features_hidden_constant(vector_features, "create_all_node_features")
+    all_node_features.set_shape(vector_features.shape)
 
     def fn(data):
         vertex_index = data['vertex_index']
 
         if isinstance(vertex_index, tf.Tensor):
-            sample_features = tf.gather(vector_features, vertex_index, axis=0)
+            sample_features = tf.gather(all_node_features, vertex_index, axis=0)
         else:
-            sample_features = vector_features[vertex_index, :]
+            sample_features = all_node_features[vertex_index, :]
 
         return {**data, 'vertex_features': sample_features}
 

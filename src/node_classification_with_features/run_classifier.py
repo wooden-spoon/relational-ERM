@@ -18,7 +18,7 @@ from scripts.run_skipgram_simple import parse_arguments, \
 
 def main():
     # tf.enable_eager_execution()
-
+    #
     # # create fake args for debugging
     # sys.argv = ['']
     # args = parse_arguments()
@@ -27,7 +27,7 @@ def main():
 
     args = parse_arguments()
 
-    graph_data = load_data_graphsage()
+    graph_data = load_data_graphsage(args.data_dir)
 
 
     """

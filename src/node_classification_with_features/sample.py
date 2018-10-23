@@ -20,7 +20,8 @@ def make_sample(sampler, args):
 
 def augment_sample(graph_data, args, dataset_fn=None, num_samples=None):
     """
-    Augments a graph sampler by (i) standardizing subgraph formatting,
+    Augments a graph sampler by
+    (i) standardizing subgraph formatting,
     and (ii) adding node features and classes
 
     Parameters
@@ -34,6 +35,7 @@ def augment_sample(graph_data, args, dataset_fn=None, num_samples=None):
     -------
     tensorflow dataset that generates subgraphs augmented with node features and classes
     """
+
     def input_fn():
         dataset = dataset_fn(graph_data, args.seed)
 
@@ -48,12 +50,13 @@ def augment_sample(graph_data, args, dataset_fn=None, num_samples=None):
             adapters.format_features_labels())
 
         dataset = dataset.map(data_processing, 4)
-        if num_samples is not None:
-            dataset = dataset.take(num_samples)
 
         if args.batch_size is not None:
             dataset = dataset.apply(
                 adapters.padded_batch_samples(args.batch_size))
+
+        if num_samples is not None:
+            dataset = dataset.take(num_samples)
 
         dataset = dataset.prefetch(tf.contrib.data.AUTOTUNE)
 
@@ -86,7 +89,7 @@ def _create_dev_dataset(graph_data):
                                     'batch_size'])
 
     args.sampler = 'random-walk'
-    args.num_edges = 2000
+    args.num_edges = 30000
     args.window_size = 1
     args.dataset_shards = 1
     args.num_negative = 5
@@ -102,9 +105,9 @@ def _create_dev_dataset(graph_data):
     sampler = dataset.make_one_shot_iterator()
     (features, labels) = sampler.get_next()
 
-    edge_list = features['edge_list'].numpy()
-    vertex_features = features['vertex_features'].numpy()
-    classes = labels['labels'].numpy()
+    edge_list = tf.squeeze(features['edge_list']).numpy()
+    vertex_features = tf.squeeze(features['vertex_features']).numpy()
+    classes = tf.squeeze(labels['classes']).numpy()
 
     # produce stuff that loader expects
 
@@ -125,7 +128,7 @@ def _create_dev_dataset(graph_data):
 def main():
     tf.enable_eager_execution()
 
-    graph_data = load_data_graphsage('../data/reddit/reddit-dev.npz')
+    graph_data = load_data_graphsage('../data/reddit/reddit.npz')
 
     args = namedtuple('dummyArgs', ['sampler',
                                     'num_edges',
@@ -137,7 +140,7 @@ def main():
                                     'seed',
                                     'batch_size'])
 
-    args.sampler = 'random-walk'
+    args.sampler = 'biased-walk'
     args.num_edges = 800
     args.window_size = 10
     args.dataset_shards = 1
