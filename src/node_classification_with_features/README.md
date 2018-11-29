@@ -27,7 +27,10 @@ Tensorboard logging files are stored in train-dir (logging/reddit in the example
 # STRUCTURE #
 
 `sample.py` : high level logic for constructing SAMPLE using the provided tools
+
 `node_classification_template.py` : template for constructing tensorflow estimators for node classification on graphs using vector valued features
+
 `predictor_class_and_losses.py` : Specifies a (neural-net based) predictor class and associated loss function. Constructs an estimator by calling `node_classification_template.py`
+
 `run_classifier.py` : combines the model ingredients, runs training, and runs evaluation
 
