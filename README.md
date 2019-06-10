@@ -1,6 +1,6 @@
 # README #
 
-This is software provided with the paper "Empirical Risk Minimization and Stochastic Gradient Descent for Relational Data" (http://victorveitch.com/assets/pdfs/relational_ERM.pdf)
+This is software provided with the paper "Empirical Risk Minimization and Stochastic Gradient Descent for Relational Data" (https://arxiv.org/abs/1806.10701)
 
 Requires Python 3.6 with TensorFlow 1.11
 
