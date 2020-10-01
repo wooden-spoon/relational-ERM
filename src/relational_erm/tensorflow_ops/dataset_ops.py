@@ -45,7 +45,10 @@ class BiasedRandomWalkDataset(tf.data.Dataset):
         self.walk_length = walk_length
         self.p = p
         self.q = q
-        super(BiasedRandomWalkDataset, self).__init__()
+        super(BiasedRandomWalkDataset, self).__init__(self._as_variant_tensor())
+
+        # Hack to prevent OptimizeDataset which is incompatible with our dataset
+        self._options_attr.experimental_optimization.apply_default_optimizations = False
 
     def _as_variant_tensor(self):
         return _library().biased_walk_dataset(
@@ -68,6 +71,15 @@ class BiasedRandomWalkDataset(tf.data.Dataset):
     @property
     def output_classes(self):
         return {'walk': tf.Tensor}
+
+    def _inputs(self):
+        return []
+
+    @property
+    def element_spec(self):
+        return {
+            'walk': tf.TensorSpec([None], tf.int32, 'walk')
+        }
 
 
 class PSamplingDataset(tf.data.Dataset):
@@ -95,7 +107,10 @@ class PSamplingDataset(tf.data.Dataset):
         else:
             self.p = tf.sqrt(n / len(neighbours))
 
-        super(PSamplingDataset, self).__init__()
+        super(PSamplingDataset, self).__init__(self._as_variant_tensor())
+
+        # Hack to prevent OptimizeDataset which is incompatible with our dataset
+        self._options_attr.experimental_optimization.apply_default_optimizations = False
 
     def _as_variant_tensor(self):
         return _library().p_sampling_dataset(
@@ -133,6 +148,18 @@ class PSamplingDataset(tf.data.Dataset):
             'vertex_index': tf.Tensor
         }
 
+    def _inputs(self):
+        return []
+
+    @property
+    def element_spec(self):
+        return {
+            'lengths': tf.TensorSpec([None], tf.int32),
+            'neighbours': tf.TensorSpec([None], tf.int32),
+            'offsets': tf.TensorSpec([None], tf.int32),
+            'vertex_index': tf.TensorSpec([None], tf.int32)
+        }
+
 
 class UniformEdgeDataset(tf.data.Dataset):
     """ This class implements a uniform edge sampler. """
@@ -152,7 +179,10 @@ class UniformEdgeDataset(tf.data.Dataset):
         self.neighbours = neighbours
         self.lengths = lengths
         self.offsets = offsets
-        super(UniformEdgeDataset, self).__init__()
+        super(UniformEdgeDataset, self).__init__(self._as_variant_tensor())
+
+        # Hack to prevent OptimizeDataset which is incompatible with our dataset
+        self._options_attr.experimental_optimization.apply_default_optimizations = False
 
     def _as_variant_tensor(self):
         return _library().uniform_edge_dataset(
@@ -180,6 +210,20 @@ class UniformEdgeDataset(tf.data.Dataset):
     def output_classes(self):
         return {'edge_list': tf.Tensor}
 
+    @property
+    def element_spec(self):
+        if isinstance(self.sample_size, numbers.Number):
+            num_samples = self.sample_size
+        else:
+            num_samples = None
+
+        return {
+            'edge_list': tf.TensorSpec([num_samples, 2], tf.int32, 'edge_list')
+        }
+
+    def _inputs(self):
+        return []
+
 
 class RandomWalkDataset(tf.data.Dataset):
     """ This class implements a uniform random walk on a graph. """
@@ -199,7 +243,10 @@ class RandomWalkDataset(tf.data.Dataset):
         self.neighbours = neighbours
         self.lengths = lengths
         self.offsets = offsets
-        super(RandomWalkDataset, self).__init__()
+        super(RandomWalkDataset, self).__init__(self._as_variant_tensor())
+
+        # Hack to prevent OptimizeDataset which is incompatible with our dataset
+        self._options_attr.experimental_optimization.apply_default_optimizations = False
 
     def _as_variant_tensor(self):
         return _library().random_walk_dataset(
@@ -226,4 +273,18 @@ class RandomWalkDataset(tf.data.Dataset):
     @property
     def output_classes(self):
         return {'walk': tf.Tensor}
+
+    @property
+    def element_spec(self):
+        if isinstance(self.walk_length, numbers.Number):
+            walk_length = self.walk_length
+        else:
+            walk_length = None
+
+        return {
+            'walk': tf.TensorSpec([walk_length], tf.int32, 'walk')
+        }
+
+    def _inputs(self):
+        return []
 

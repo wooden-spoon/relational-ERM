@@ -24,9 +24,9 @@ public:
         int64 seed;
         int64 seed2;
 
-        OP_REQUIRES_OK(ctx, ParseScalarArgument<int32>(ctx, "walk_length", &walk_length));
-        OP_REQUIRES_OK(ctx, ParseScalarArgument<int64>(ctx, "seed", &seed));
-        OP_REQUIRES_OK(ctx, ParseScalarArgument<int64>(ctx, "seed2", &seed2));
+        OP_REQUIRES_OK(ctx, tensorflow::data::ParseScalarArgument<int32>(ctx, "walk_length", &walk_length));
+        OP_REQUIRES_OK(ctx, tensorflow::data::ParseScalarArgument<int64>(ctx, "seed", &seed));
+        OP_REQUIRES_OK(ctx, tensorflow::data::ParseScalarArgument<int64>(ctx, "seed2", &seed2));
 
         OP_REQUIRES_OK(ctx, ctx->input("neighbours", &neighbours));
         OP_REQUIRES_OK(ctx, ctx->input("lengths", &lengths));
@@ -65,6 +65,10 @@ private:
 
         string DebugString() const override {
             return "RandomWalkDatasetOp::Dataset";
+        }
+
+        Status CheckExternalState() const override {
+            return Status::OK();
         }
     protected:
         Status AsGraphDefInternal(SerializationContext* ctx, DatasetGraphDefBuilder* b, Node** output) const override {
@@ -140,6 +144,15 @@ private:
 
                 out_tensors->emplace_back(std::move(out_walk));
 
+                return Status::OK();
+            }
+
+        protected:
+            Status SaveInternal(SerializationContext* ctx, IteratorStateWriter* writer) override {
+                return Status::OK();
+            }
+
+            Status RestoreInternal(IteratorContext* ctx, IteratorStateReader* reader) override {
                 return Status::OK();
             }
         private:

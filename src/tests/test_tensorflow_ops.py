@@ -12,7 +12,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 
 def load_data_adjacency_list():
-    data_dir = '../../data/homo_sapiens'
+    data_dir = '../data/homo_sapiens'
 
     data_path = os.path.join(data_dir, 'homo_sapiens.npz')
 
@@ -29,18 +29,13 @@ def load_data_adjacency_list():
 def test_biased_walk_tensorflow():
     adj_list, labels = load_data_adjacency_list()
 
-    with tf.Graph().as_default():
-        dataset = ops.BiasedRandomWalkDataset(
-            100, 1, 1, adj_list.neighbours, adj_list.lengths, adj_list.offsets)
+    dataset = ops.BiasedRandomWalkDataset(
+        100, 1, 1, adj_list.neighbours, adj_list.lengths, adj_list.offsets)
 
-        it = dataset.make_one_shot_iterator()
+    n_value = next(iter(dataset))
 
-        n = it.get_next()
-
-        with tf.Session() as session:
-            n_value = session.run(n)
-
-    assert len(n_value) == 100
+    assert 'walk' in n_value
+    assert len(n_value['walk']) == 100
 
 
 def test_biased_walk_tensorflow_shape_validation():
@@ -62,15 +57,8 @@ def test_biased_walk_tensorflow_shape_validation():
 def test_uniform_edge_sampler():
     adj_list, labels = load_data_adjacency_list()
 
-    with tf.Graph().as_default():
-        dataset = ops.UniformEdgeDataset(100, adj_list.neighbours, adj_list.lengths, adj_list.offsets)
-
-        it = dataset.make_one_shot_iterator()
-
-        n = it.get_next()
-
-        with tf.Session() as session:
-            n_value = session.run(n)
+    dataset = ops.UniformEdgeDataset(100, adj_list.neighbours, adj_list.lengths, adj_list.offsets)
+    n_value = next(iter(dataset))
 
     assert n_value['edge_list'].shape == (100, 2)
 
@@ -78,13 +66,8 @@ def test_uniform_edge_sampler():
 def test_random_walk_sampler():
     adj_list, labels = load_data_adjacency_list()
 
-    with tf.Graph().as_default():
-        dataset = ops.RandomWalkDataset(20, adj_list.neighbours, adj_list.lengths, adj_list.offsets)
+    dataset = ops.RandomWalkDataset(20, adj_list.neighbours, adj_list.lengths, adj_list.offsets)
 
-        it = dataset.make_one_shot_iterator()
-        n = it.get_next()
-
-        with tf.Session() as session:
-            n_value = session.run(n)
+    n_value = next(iter(dataset))
 
     assert n_value['walk'].shape[0] == 20

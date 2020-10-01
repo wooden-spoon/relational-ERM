@@ -1,3 +1,5 @@
+import pytest
+
 import os
 import numpy as np
 import tensorflow as tf
@@ -25,11 +27,7 @@ def create_graph(num_edges, num_vertex):
 def test_adapt_edge_list():
     adj_list, edges = create_graph(20, 10)
 
-    with tf.Graph().as_default():
-        edge_list_op = ops.adjacency_to_edge_list(adj_list.neighbours, adj_list.lengths, redundant=False)
-
-        with tf.Session() as session:
-            new_edge_list = session.run(edge_list_op)
+    new_edge_list = ops.adjacency_to_edge_list(adj_list.neighbours, adj_list.lengths, redundant=False)
 
     assert new_edge_list.shape == edges.shape
 
@@ -37,11 +35,7 @@ def test_adapt_edge_list():
 def test_adapt_edge_list_posneg_no_redundant():
     adj_list, edges = create_graph(20, 10)
 
-    with tf.Graph().as_default():
-        edge_list_op = ops.adjacency_to_posneg_edge_list(adj_list.neighbours, adj_list.lengths, redundant=False)
-
-        with tf.Session() as session:
-            new_edge_list_pos, new_edge_list_neg = session.run(edge_list_op)
+    new_edge_list_pos, new_edge_list_neg = ops.adjacency_to_posneg_edge_list(adj_list.neighbours, adj_list.lengths, redundant=False)
 
     assert new_edge_list_pos.shape[0] == edges.shape[0]
 
@@ -49,11 +43,7 @@ def test_adapt_edge_list_posneg_no_redundant():
 def test_adapt_edge_list_posneg_redundant():
     adj_list, edges = create_graph(20, 10)
 
-    with tf.Graph().as_default():
-        edge_list_op = ops.adjacency_to_posneg_edge_list(adj_list.neighbours, adj_list.lengths, redundant=True)
-
-        with tf.Session() as session:
-            new_edge_list_pos, new_edge_list_neg = session.run(edge_list_op)
+    new_edge_list_pos, new_edge_list_neg = ops.adjacency_to_posneg_edge_list(adj_list.neighbours, adj_list.lengths, redundant=True)
 
     assert new_edge_list_pos.shape[0] == edges.shape[0] * 2
 
@@ -61,12 +51,8 @@ def test_adapt_edge_list_posneg_redundant():
 def test_get_induced_subgraph():
     adj_list, edges = create_graph(20, 10)
 
-    with tf.Graph().as_default():
-        subgraph_op = ops.get_induced_subgraph(
-            [1, 3, 5], adj_list.neighbours, adj_list.lengths, adj_list.offsets)
-
-        with tf.Session() as session:
-            neighbours, lengths, offsets = session.run(subgraph_op)
+    neighbours, lengths, offsets = ops.get_induced_subgraph(
+        [1, 3, 5], adj_list.neighbours, adj_list.lengths, adj_list.offsets)
 
     assert len(lengths) == 3
     assert len(offsets) == 3
@@ -75,12 +61,8 @@ def test_get_induced_subgraph():
 def test_open_ego_network():
     adj_list, edges = create_graph(20, 10)
 
-    with tf.Graph().as_default():
-        ego_edges_op = ops.get_open_ego_network(np.array([1, 3, 5], dtype=np.int32),
-                                                adj_list.neighbours, adj_list.lengths, adj_list.offsets)
-
-        with tf.Session() as session:
-            ego_edges = session.run(ego_edges_op)
+    ego_edges = ops.get_open_ego_network(np.array([1, 3, 5], dtype=np.int32),
+                                            adj_list.neighbours, adj_list.lengths, adj_list.offsets)
 
     assert ego_edges.shape[1] == 2
     assert ego_edges.shape[0] == adj_list.lengths[[1, 3, 5]].sum()
