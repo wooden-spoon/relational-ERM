@@ -57,8 +57,8 @@ public:
             EdgeSliceIndex e_slice_offsets_end = {current_offset, 1};
             EdgeSliceIndex e_slice_lengths = {length_i, 1};
 
-            edge_list_vec.slice(e_slice_offsets_start, e_slice_lengths) = neighbours_i.constant(i);
-            edge_list_vec.slice(e_slice_offsets_end, e_slice_lengths) = neighbours_i;
+            edge_list_vec.slice(e_slice_offsets_start, e_slice_lengths).chip(0, 1) = neighbours_i.constant(i);
+            edge_list_vec.slice(e_slice_offsets_end, e_slice_lengths).chip(0, 1) = neighbours_i;
             current_offset += length_i;
         }
     }

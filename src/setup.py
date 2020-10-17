@@ -28,7 +28,6 @@ class TensorflowExtension(Extension):
                             '/wd4267', '/wd4244', '/permissive-'])
         else:
             _append_to_key(kwargs, 'library_dirs', [tf.sysconfig.get_lib()])
-            _append_to_key(kwargs, 'libraries', ['tensorflow_framework'])
             _append_to_key(kwargs, 'extra_compile_args',
                            [f for f in tf.sysconfig.get_compile_flags()
                             if not f.startswith('-I')] +
