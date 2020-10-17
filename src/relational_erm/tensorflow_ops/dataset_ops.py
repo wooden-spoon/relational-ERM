@@ -102,8 +102,8 @@ class PSamplingDataset(tf.data.Dataset):
         self.offsets = offsets
         self.lengths = lengths
 
-        if tf.contrib.framework.is_tensor(neighbours):
-            self.p = tf.sqrt(n / tf.to_float(tf.size(neighbours)))
+        if tf.is_tensor(neighbours):
+            self.p = tf.sqrt(n / tf.cast(tf.size(input=neighbours), dtype=tf.float32))
         else:
             self.p = tf.sqrt(n / len(neighbours))
 

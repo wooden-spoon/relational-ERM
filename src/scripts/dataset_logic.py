@@ -39,7 +39,7 @@ def load_data_graphsage(data_path=None):
 
     # use tensorflow loading to support loading from
     # cloud providers
-    with tf.gfile.Open(data_path, mode='rb') as f:
+    with tf.io.gfile.GFile(data_path, mode='rb') as f:
         loaded = np.load(f, allow_pickle=False)
 
     # graph attributes
@@ -104,7 +104,7 @@ def load_data_node2vec(data_path=None):
 
     # use tensorflow loading to support loading from
     # cloud providers
-    with tf.gfile.Open(data_path, mode='rb') as f:
+    with tf.io.gfile.GFile(data_path, mode='rb') as f:
         loaded = np.load(f, allow_pickle=False)
 
     edge_list = loaded['edge_list'].astype(np.int32)
@@ -145,7 +145,7 @@ def load_data_wikipedia_hyperlink(data_path=None):
     if data_path is None:
         data_path = '../data/wikipedia_hlink/wikipedia_hlink_preprocessed.npz'
 
-    with tf.gfile.Open(data_path, mode='rb') as f:
+    with tf.io.gfile.GFile(data_path, mode='rb') as f:
         loaded = np.load(f, allow_pickle=True)
 
     neighbours = loaded['neighbours']

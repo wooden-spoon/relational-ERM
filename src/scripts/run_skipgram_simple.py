@@ -92,7 +92,7 @@ def make_input_fn(graph_data, args, dataset_fn=None, num_samples=None):
             dataset = dataset.apply(
                 adapters.padded_batch_samples(args.batch_size))
 
-        dataset = dataset.prefetch(tf.contrib.data.AUTOTUNE)
+        dataset = dataset.prefetch(tf.data.experimental.AUTOTUNE)
 
         return dataset
 
@@ -116,7 +116,7 @@ def _adjust_regularization(regularization, batch_size):
 def _make_global_optimizer(args):
     def fn():
         learning_rate = args.global_learning_rate
-        return tf.train.GradientDescentOptimizer(
+        return tf.compat.v1.train.GradientDescentOptimizer(
             _adjust_learning_rate(learning_rate, args.batch_size))
     return fn
 
@@ -138,7 +138,7 @@ def make_n2v_test_dataset_fn(args, graph_data):
 
 
 def main():
-    tf.logging.set_verbosity(tf.logging.INFO)
+    tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.INFO)
     args = parse_arguments()
 
     # graph_data = load_data_node2vec()
@@ -148,7 +148,7 @@ def main():
         label_task_weight=args.label_task_weight,
         regularization=_adjust_regularization(args.global_regularization, args.batch_size),
         global_optimizer=_make_global_optimizer(args),
-        embedding_optimizer=lambda: tf.train.GradientDescentOptimizer(
+        embedding_optimizer=lambda: tf.compat.v1.train.GradientDescentOptimizer(
             _adjust_learning_rate(args.embedding_learning_rate, args.batch_size)),
         polyak=False)
 
@@ -158,10 +158,10 @@ def main():
         'embedding_checkpoint': None
     }
 
-    session_config = tf.ConfigProto()
+    session_config = tf.compat.v1.ConfigProto()
 
     if args.use_xla:
-        session_config.graph_options.optimizer_options.global_jit_level = tf.OptimizerOptions.ON_1
+        session_config.graph_options.optimizer_options.global_jit_level = tf.compat.v1.OptimizerOptions.ON_1
 
     run_config = tf.estimator.RunConfig(log_step_count_steps=1000, session_config=session_config)
 
@@ -177,7 +177,7 @@ def main():
         config=run_config)
 
     hooks = [
-        tf.train.LoggingTensorHook({
+        tf.estimator.LoggingTensorHook({
             'kappa_insample': 'kappa_insample_batch/value',
             'kappa_outsample': 'kappa_outsample_batch/value',
             'kappa_edges': 'kappa_edges_in_batch/value'},
@@ -185,7 +185,7 @@ def main():
     ]
 
     if args.profile:
-        hooks.append(tf.train.ProfilerHook(save_secs=30))
+        hooks.append(tf.estimator.ProfilerHook(save_secs=30))
 
     if args.debug:
         from tensorflow.python import debug as tfdbg

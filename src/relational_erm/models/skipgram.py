@@ -11,7 +11,7 @@ def make_skipgram():
     """
 
     def make_label_logits(embeddings, features, mode, params):
-        return tf.zeros([tf.shape(embeddings)[0], params['n_labels']])
+        return tf.zeros([tf.shape(input=embeddings)[0], params['n_labels']])
 
     def make_no_label_loss(logits, present_labels, split):
         return tf.constant(0, dtype=tf.float32)
@@ -40,9 +40,9 @@ def make_multilabel_logistic_regression(label_task_weight=0.5, regularization=0.
 
     def make_label_logits(embeddings, features, mode, params):
         # actually computes 0.5 * \sum w^2, so it should just reproduce sklearn
-        regularizer = tf.contrib.layers.l2_regularizer(scale=label_task_weight * regularization)
+        regularizer = tf.keras.regularizers.l2(l=0.5 * (label_task_weight * regularization))
 
-        layer = tf.layers.dense(
+        layer = tf.compat.v1.layers.dense(
             embeddings, params['n_labels'], activation=None, use_bias=True,
             kernel_regularizer=regularizer,
             bias_regularizer=regularizer,
@@ -71,9 +71,9 @@ def make_multilabel_deep_logistic_regression():
 
     def make_label_logits(embeddings, features, mode, params):
         for units in params['hidden_units']:
-            net = tf.layers.dense(embeddings, units=units, activation=tf.nn.relu)
+            net = tf.compat.v1.layers.dense(embeddings, units=units, activation=tf.nn.relu)
 
-        return tf.layers.dense(net, params['n_labels'], activation=None)
+        return tf.compat.v1.layers.dense(net, params['n_labels'], activation=None)
 
     return make_node_classifier(make_label_logits=make_label_logits,
                                 make_edge_logits=_make_edge_list_logits,
@@ -101,15 +101,15 @@ def _make_label_sigmoid_cross_entropy_loss(logits, present_labels, split):
     The cross-entropy loss corresponding to the label.
     """
     if len(logits.shape) == 3:
-        batch_size = tf.to_float(tf.shape(logits)[0])
+        batch_size = tf.cast(tf.shape(input=logits)[0], dtype=tf.float32)
     else:
         batch_size = 1
 
-    label_pred_losses = tf.losses.sigmoid_cross_entropy(
-        present_labels, logits=logits, weights=tf.expand_dims(split, -1), reduction=tf.losses.Reduction.NONE)
+    label_pred_losses = tf.compat.v1.losses.sigmoid_cross_entropy(
+        present_labels, logits=logits, weights=tf.expand_dims(split, -1), reduction=tf.compat.v1.losses.Reduction.NONE)
 
     # sum rather than (tf default of) mean because ¯\_(ツ)_/¯
-    label_pred_loss = tf.reduce_sum(label_pred_losses)
+    label_pred_loss = tf.reduce_sum(input_tensor=label_pred_losses)
 
     return label_pred_loss / batch_size
 
@@ -151,7 +151,7 @@ def _make_edge_list_logits(embeddings, features, edge_list, weights, params):
     -------
     a tensor representing the edge prediction loss.
     """
-    with tf.name_scope('edge_list_logits'):
+    with tf.compat.v1.name_scope('edge_list_logits'):
         pairwise_inner_prods = tf.matmul(embeddings, embeddings, transpose_b=True,
                                          name='all_edges_logit')
 
@@ -162,9 +162,9 @@ def _make_edge_list_logits(embeddings, features, edge_list, weights, params):
         else:
             no_batch = False
 
-        edge_list_shape = tf.shape(edge_list)
-        batch_size = edge_list.shape[0].value if edge_list.shape[0].value is not None else edge_list_shape[0]
-        num_edges = edge_list.shape[1].value if edge_list.shape[1].value is not None else edge_list_shape[1]
+        edge_list_shape = tf.shape(input=edge_list)
+        batch_size = edge_list.shape[0] if edge_list.shape[0] is not None else edge_list_shape[0]
+        num_edges = edge_list.shape[1] if edge_list.shape[1] is not None else edge_list_shape[1]
 
         batch_index = tf.tile(
             tf.expand_dims(tf.expand_dims(tf.range(batch_size), -1), -1),
@@ -194,17 +194,17 @@ def make_simple_skipgram_loss(clip=None):
     loss: a function which computes the loss.
     """
     def loss(edge_logits, num_vertex, edge_list, edge_weights, params):
-        with tf.name_scope('skipgram_loss', values=[edge_logits, edge_list, edge_weights]):
+        with tf.compat.v1.name_scope('skipgram_loss', values=[edge_logits, edge_list, edge_weights]):
             if len(edge_list.shape) == 3:
-                batch_size = tf.to_float(tf.shape(edge_list)[0])
+                batch_size = tf.cast(tf.shape(input=edge_list)[0], dtype=tf.float32)
             else:
                 batch_size = 1.
 
-            edge_present = tf.to_float(tf.equal(edge_weights, 1))
+            edge_present = tf.cast(tf.equal(edge_weights, 1), dtype=tf.float32)
 
             # values of -1 in the weights indicate padded edges which should be ignored
             # in loss computation.
-            edge_censored = tf.to_float(tf.not_equal(edge_weights, -1))
+            edge_censored = tf.cast(tf.not_equal(edge_weights, -1), dtype=tf.float32)
 
             edge_pred_loss = tf.nn.sigmoid_cross_entropy_with_logits(
                 labels=edge_present, logits=edge_logits)
@@ -215,7 +215,7 @@ def make_simple_skipgram_loss(clip=None):
                 edge_pred_loss = tf.clip_by_value(edge_pred_loss, 0, clip)
 
             # sum instead of (tf default of) mean because mean screws up learning rates for embeddings
-            loss_value = tf.divide(tf.reduce_sum(edge_pred_loss), batch_size,
+            loss_value = tf.divide(tf.reduce_sum(input_tensor=edge_pred_loss), batch_size,
                                    name='skipgram_edge_loss')
         return loss_value
 

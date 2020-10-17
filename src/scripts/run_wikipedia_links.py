@@ -13,7 +13,7 @@ from .dataset_logic import load_data_wikipedia_hyperlink
 
 
 def _constant_hidden_value(value, name):
-    return tf.py_func(
+    return tf.compat.v1.py_func(
         lambda: value,
         [], tf.int32, stateful=False,
         name=name)
@@ -58,7 +58,7 @@ def make_input_fn(adjacency_list, packed_labels, dataset_shards=None):
         dataset = dataset.map(processing_fn, num_parallel_calls=12)
         dataset = dataset.prefetch(params.batch_size * 2)
         dataset = dataset.apply(adapters.padded_batch_samples(params.batch_size))
-        return dataset.apply(tf.contrib.data.prefetch_to_device('/gpu:0'))
+        return dataset.apply(tf.data.experimental.prefetch_to_device('/gpu:0'))
 
     return input_fn
 
@@ -91,7 +91,7 @@ def main():
 
     args = parser.parse_args()
 
-    tf.logging.set_verbosity(tf.logging.INFO)
+    tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.INFO)
 
     hparams = HParams(num_edges=800,
                       window_size=10,
@@ -118,12 +118,12 @@ def main():
             tf_random_seed=hparams.seed))
 
     hooks = [
-        tf.train.LoggingTensorHook({
+        tf.estimator.LoggingTensorHook({
             'kappa_edges': 'kappa_edges_in_batch/value'},
             every_n_secs=30)]
 
     if args.profile:
-        hooks.append(tf.train.ProfilerHook(save_secs=10))
+        hooks.append(tf.estimator.ProfilerHook(save_secs=10))
 
     estimator.train(input_fn, max_steps=args.max_steps, hooks=hooks)
 

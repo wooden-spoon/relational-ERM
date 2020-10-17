@@ -42,10 +42,10 @@ def make_train_logistic_estimator(embedding_ckpt):
         model = make_multilabel_logistic_regression(
             label_task_weight=1.0,
             regularization=_adjust_regularization(args.global_regularization, args.batch_size),
-            global_optimizer=tf.train.GradientDescentOptimizer(
+            global_optimizer=tf.compat.v1.train.GradientDescentOptimizer(
                 _adjust_learning_rate(args.global_learning_rate,
                                       args.batch_size)))
-        hooks = [tf.train.LoggingTensorHook(
+        hooks = [tf.estimator.LoggingTensorHook(
             {'kappa_insample': 'kappa_insample_batch/value',
              'kappa_outsample': 'kappa_outsample_batch/value'},
             every_n_secs=30)]
@@ -57,14 +57,14 @@ def make_train_logistic_estimator(embedding_ckpt):
 
 def make_optimizer(args):
     def fn():
-        return tf.train.GradientDescentOptimizer(
+        return tf.compat.v1.train.GradientDescentOptimizer(
             _adjust_learning_rate(args.learning_rate, args.batch_size))
 
     return fn
 
 
 def main():
-    tf.logging.set_verbosity(tf.logging.INFO)
+    tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.INFO)
     args = parse_arguments()
 
     # graph_data = load_data_node2vec()
@@ -81,7 +81,7 @@ def main():
         regularization=args.global_regularization,
         global_optimizer=make_optimizer(args),
         polyak=False)
-    hooks = [tf.train.LoggingTensorHook(
+    hooks = [tf.estimator.LoggingTensorHook(
         {'kappa_insample': 'kappa_insample_batch/value',
          'kappa_outsample': 'kappa_outsample_batch/value'},
         every_n_secs=30)]
@@ -97,7 +97,7 @@ def main():
         model_dir=args.train_dir)
 
     if args.profile:
-        hooks.append(tf.train.ProfilerHook(save_secs=30))
+        hooks.append(tf.estimator.ProfilerHook(save_secs=30))
 
     if args.debug:
         from tensorflow.python import debug as tfdbg

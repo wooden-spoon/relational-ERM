@@ -1,10 +1,8 @@
 import os
 import pytest
 
-import relational_erm.tensorflow_ops.array_ops
 from relational_erm.graph_ops.representations import edge_list_to_adj_list, create_packed_adjacency_list
 from relational_erm.tensorflow_ops import dataset_ops as ops
-from relational_erm.tensorflow_ops import adapter_ops
 import numpy as np
 import tensorflow as tf
 
@@ -46,11 +44,11 @@ def test_biased_walk_tensorflow_shape_validation():
             dataset = ops.BiasedRandomWalkDataset(
                 100, np.array([1, 2], dtype=np.float32), 1, adj_list.neighbours, adj_list.lengths, adj_list.offsets)
 
-            it = dataset.make_one_shot_iterator()
+            it = tf.compat.v1.data.make_one_shot_iterator(dataset)
 
             n = it.get_next()
 
-            with tf.Session() as session:
+            with tf.compat.v1.Session() as session:
                 _ = session.run(n)
 
 

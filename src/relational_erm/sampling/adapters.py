@@ -187,8 +187,8 @@ def adapt_random_walk_induced(neighbours, lengths, offsets, name=None):
     def fn(data):
         walk = data['walk']
 
-        with tf.name_scope(name, 'random_walk_to_induced', [walk, neighbours, lengths, offsets]):
-            vertex_index = tf.contrib.framework.sort(
+        with tf.compat.v1.name_scope(name, 'random_walk_to_induced', [walk, neighbours, lengths, offsets]):
+            vertex_index = tf.sort(
                 tf.unique(walk)[0],
                 name='walk_index')
 
@@ -264,20 +264,20 @@ def adapt_packed_subgraph_posneg(num_neg_per_pos=None, seed=None):
         edge_list_neg = tf.gather(vertex_index, edge_list_neg, name='RestoreIndexNeg')
 
         if num_neg_per_pos is not None:
-            num_pos = tf.shape(edge_list_pos)[0]
-            num_neg = tf.to_int32(num_neg_per_pos * num_pos)
+            num_pos = tf.shape(input=edge_list_pos)[0]
+            num_neg = tf.cast(num_neg_per_pos * num_pos, dtype=tf.int32)
 
-            neg_idx = tf.random_uniform(
+            neg_idx = tf.random.uniform(
                 tf.reshape(num_neg, [1]),
-                minval=0, maxval=tf.shape(edge_list_neg)[0],
+                minval=0, maxval=tf.shape(input=edge_list_neg)[0],
                 dtype=tf.int32, seed=seed)
 
             edge_list_neg = tf.gather(edge_list_neg, neg_idx, name='SubsampleNegEdges')
 
         del data['vertex_index']
 
-        weights_pos = tf.ones(tf.reshape(tf.shape(edge_list_pos)[0], [1]), dtype=tf.float32)
-        weights_neg = tf.zeros(tf.reshape(tf.shape(edge_list_neg)[0], [1]), dtype=tf.float32)
+        weights_pos = tf.ones(tf.reshape(tf.shape(input=edge_list_pos)[0], [1]), dtype=tf.float32)
+        weights_neg = tf.zeros(tf.reshape(tf.shape(input=edge_list_neg)[0], [1]), dtype=tf.float32)
 
         edge_list = tf.concat([edge_list_pos, edge_list_neg], axis=0)
         weights = tf.concat([weights_pos, weights_neg], axis=0)
@@ -318,8 +318,8 @@ def relabel_subgraph():
         vertex_index = data.get('vertex_index', None)
 
         if isinstance(edge_list, tf.Tensor):
-            new_edge_list, new_vertex_index, is_positive = tf.py_func(relabel, [edge_list, positive_vertices],
-                                                                      [tf.int32, tf.int32, tf.int32], stateful=False)
+            new_edge_list, new_vertex_index, is_positive = tf.numpy_function(
+                relabel, [edge_list, positive_vertices], [tf.int32, tf.int32, tf.int32])
             new_edge_list.set_shape(edge_list.shape)
             new_vertex_index.set_shape([None])
             is_positive.set_shape([None])
@@ -411,7 +411,7 @@ def append_sparse_vertex_classes(classes):
 
     # hack to stop tensorflow from storing the full array in the graph def
     def _make_hidden_constant(value, name):
-        return tf.py_func(
+        return tf.compat.v1.py_func(
             lambda: value,
             [], tf.int32, stateful=False,
             name=name)
@@ -444,7 +444,7 @@ def append_vertex_vector_features(vector_features):
     """
     # hack to stop tensorflow from storing the full array in the graph def
     def _make_features_hidden_constant(value, name):
-        return tf.py_func(
+        return tf.compat.v1.py_func(
             lambda: value,
             [], tf.float32, stateful=False,
             name=name)
@@ -503,8 +503,8 @@ def add_sample_size_info():
     """
     def fn(data):
         shape_info = {
-            'num_edges': tf.shape(data['edge_list'])[0],
-            'num_vertex': tf.size(data['vertex_index'])
+            'num_edges': tf.shape(input=data['edge_list'])[0],
+            'num_vertex': tf.size(input=data['vertex_index'])
         }
 
         return {**data, **shape_info}
@@ -523,27 +523,28 @@ def padded_batch_samples(batch_size):
     }
 
     def fn(dataset):
-        if 'vertex_features' in dataset.output_shapes[0]:
+        if 'vertex_features' in dataset.element_spec[0]:
             feature_pad_values['vertex_features'] = 0.0
 
         label_pad_values = {
         }
 
-        if 'split' in dataset.output_shapes[1]:
+        if 'split' in dataset.element_spec[1]:
             label_pad_values['split'] = -1
 
-        if 'labels' in dataset.output_shapes[1]:
+        if 'labels' in dataset.element_spec[1]:
             # dense labels
             label_pad_values['labels'] = 0.0
-        elif 'packed_labels' in dataset.output_shapes[1]:
+        elif 'packed_labels' in dataset.element_spec[1]:
             # packed labels
             label_pad_values['packed_labels'] = 0
             label_pad_values['packed_labels_lengths'] = 0
-        elif 'classes' in dataset.output_shapes[1]:
+        elif 'classes' in dataset.element_spec[1]:
             label_pad_values['classes'] = 0
 
+        # check that this has been converted properly
         return dataset.padded_batch(
-            batch_size, dataset.output_shapes,
+            batch_size, tf.nest.map_structure(lambda x: x.shape, dataset.element_spec),
             (feature_pad_values, label_pad_values),
             drop_remainder=True)
 

@@ -18,22 +18,22 @@ def oracle_predictions(labels, logits, name=None):
     -------
     predictions: the predictions obtained from the oracle threshold.
     """
-    with tf.name_scope(name, 'oracle_predictions', values=[labels, logits]):
-        num_true = tf.to_int32(tf.reduce_sum(labels, axis=-1, name='num_true', keepdims=True))
+    with tf.compat.v1.name_scope(name, 'oracle_predictions', values=[labels, logits]):
+        num_true = tf.cast(tf.reduce_sum(input_tensor=labels, axis=-1, name='num_true', keepdims=True), dtype=tf.int32)
         num_true_flat = tf.reshape(num_true, [-1])
 
         logits_sorted, _ = tf.nn.top_k(logits, logits.shape[-1], sorted=True)
         logits_sorted_flat = tf.reshape(logits_sorted, [-1, logits.shape[-1]])
 
         nth_logit_index = tf.stack(
-            [tf.range(tf.size(num_true_flat), dtype=num_true_flat.dtype), num_true_flat],
+            [tf.range(tf.size(input=num_true_flat), dtype=num_true_flat.dtype), num_true_flat],
             axis=1)
 
         logits_values_flat = tf.gather_nd(logits_sorted_flat, nth_logit_index, name='top_k_value_flat')
-        logits_values = tf.reshape(logits_values_flat, tf.shape(logits)[:-1])
+        logits_values = tf.reshape(logits_values_flat, tf.shape(input=logits)[:-1])
 
         predictions = tf.greater_equal(logits, tf.expand_dims(logits_values, -1))
-        predictions = tf.to_float(predictions)
+        predictions = tf.cast(predictions, dtype=tf.float32)
 
     return predictions
 
@@ -60,27 +60,27 @@ def macro_f1(predictions, labels, weights=None,
     f1_value: the macro f1 value
     update: the operation to update the metric.
     """
-    metric_variable_collections = [tf.GraphKeys.LOCAL_VARIABLES]
+    metric_variable_collections = [tf.compat.v1.GraphKeys.LOCAL_VARIABLES]
 
-    with tf.variable_scope(name, default_name='macro_f1', values=[predictions, labels, weights]):
+    with tf.compat.v1.variable_scope(name, default_name='macro_f1', values=[predictions, labels, weights]):
         num_classes = predictions.shape[-1]
 
-        true_positives = tf.get_variable('true_positives', shape=num_classes, dtype=tf.int64,
-                                         initializer=tf.zeros_initializer,
+        true_positives = tf.compat.v1.get_variable('true_positives', shape=num_classes, dtype=tf.int64,
+                                         initializer=tf.compat.v1.zeros_initializer,
                                          trainable=False,
                                          collections=metric_variable_collections)
 
-        false_positives = tf.get_variable('false_positive', shape=num_classes, dtype=tf.int64,
-                                          initializer=tf.zeros_initializer,
+        false_positives = tf.compat.v1.get_variable('false_positive', shape=num_classes, dtype=tf.int64,
+                                          initializer=tf.compat.v1.zeros_initializer,
                                           trainable=False,
                                           collections=metric_variable_collections)
 
-        false_negatives = tf.get_variable('true_negatives', shape=num_classes, dtype=tf.int64,
-                                          initializer=tf.zeros_initializer,
+        false_negatives = tf.compat.v1.get_variable('true_negatives', shape=num_classes, dtype=tf.int64,
+                                          initializer=tf.compat.v1.zeros_initializer,
                                           trainable=False,
                                           collections=metric_variable_collections)
 
-        with tf.name_scope('update'):
+        with tf.compat.v1.name_scope('update'):
             if weights is not None:
                 weight_broadcast = tf.expand_dims(weights, -1)
             else:
@@ -92,50 +92,50 @@ def macro_f1(predictions, labels, weights=None,
             predictions = tf.not_equal(predictions, 0)
             labels = tf.not_equal(labels, 0)
 
-            assign_true_pos = tf.assign_add(
+            assign_true_pos = tf.compat.v1.assign_add(
                 true_positives,
                 tf.reduce_sum(
-                    tf.to_int64(tf.logical_and(predictions, labels)) * weight_broadcast,
+                    input_tensor=tf.cast(tf.logical_and(predictions, labels), dtype=tf.int64) * weight_broadcast,
                     axis=reduction_axes),
                 name='assign_true_positives')
-            assign_false_pos = tf.assign_add(
+            assign_false_pos = tf.compat.v1.assign_add(
                 false_positives,
                 tf.reduce_sum(
-                    tf.to_int64(tf.logical_and(predictions, tf.logical_not(labels))) * weight_broadcast,
+                    input_tensor=tf.cast(tf.logical_and(predictions, tf.logical_not(labels)), dtype=tf.int64) * weight_broadcast,
                     axis=reduction_axes),
                 name='assign_true_negatives')
-            assign_false_neg = tf.assign_add(
+            assign_false_neg = tf.compat.v1.assign_add(
                 false_negatives,
                 tf.reduce_sum(
-                    tf.to_int64(tf.logical_and(tf.logical_not(predictions), labels)) * weight_broadcast,
+                    input_tensor=tf.cast(tf.logical_and(tf.logical_not(predictions), labels), dtype=tf.int64) * weight_broadcast,
                     axis=reduction_axes),
                 name='assign_false_negatives')
 
             update = tf.group(assign_true_pos, assign_false_pos, assign_false_neg, name='compute_summary')
 
-        with tf.name_scope('value'):
-            precision = tf.where(
+        with tf.compat.v1.name_scope('value'):
+            precision = tf.compat.v1.where(
                 tf.greater(true_positives + false_positives, 0),
                 tf.divide(true_positives, true_positives + false_positives),
                 tf.zeros_like(true_positives, dtype=tf.float64),
                 name='precision')
 
-            recall = tf.where(
+            recall = tf.compat.v1.where(
                 tf.greater(true_positives + false_negatives, 0),
                 tf.divide(true_positives, true_positives + false_negatives, name='recall'),
                 tf.zeros_like(true_positives, dtype=tf.float64),
                 name='recall')
 
             f1_per_label = 2 / (1 / recall + 1 / precision)
-            f1_value = tf.reduce_mean(f1_per_label, name='macro_f1')
+            f1_value = tf.reduce_mean(input_tensor=f1_per_label, name='macro_f1')
 
     if updates_collections is not None:
         for collection in updates_collections:
-            tf.add_to_collection(collection, update)
+            tf.compat.v1.add_to_collection(collection, update)
 
     if metrics_collections is not None:
         for collection in metrics_collections:
-            tf.add_to_collection(collection, f1_value)
+            tf.compat.v1.add_to_collection(collection, f1_value)
 
     return f1_value, update
 
@@ -162,7 +162,7 @@ def macro_f1_oracle(logits, labels, weights=None,
     f1_value: the macro f1 value
     update: the operation to update the metric.
     """
-    with tf.name_scope(name, "macro_f1_oracle", values=[logits, labels, weights]):
+    with tf.compat.v1.name_scope(name, "macro_f1_oracle", values=[logits, labels, weights]):
         predictions = oracle_predictions(labels, logits)
 
         return macro_f1(predictions, labels, weights, metrics_collections, updates_collections)
@@ -180,13 +180,13 @@ def batch_accuracy(labels, predictions, weights, name=None):
     -------
     accuracy_batch: a scalar tensor representing the batch accuracy.
     """
-    with tf.name_scope(name, 'batch_accuracy', [labels, predictions, weights]):
-        weights_mean = tf.reduce_mean(weights)
+    with tf.compat.v1.name_scope(name, 'batch_accuracy', [labels, predictions, weights]):
+        weights_mean = tf.reduce_mean(input_tensor=weights)
 
         accuracy_batch = tf.reduce_mean(
-            tf.divide(
-                tf.to_float(tf.equal(labels, predictions)) * weights,
-                tf.where(tf.not_equal(weights_mean, 0), weights_mean, 1)),
+            input_tensor=tf.divide(
+                tf.cast(tf.equal(labels, predictions), dtype=tf.float32) * weights,
+                tf.compat.v1.where(tf.not_equal(weights_mean, 0), weights_mean, 1)),
             name='value')
 
     return accuracy_batch
@@ -208,12 +208,12 @@ def batch_random_agreement(labels, predictions, weights, name=None):
     random_agreement: a scalar tensor representing the probability of random
         agreement.
     """
-    with tf.name_scope(name, 'batch_random_agreement', [labels, predictions, weights]):
-        weights_mean = tf.reduce_mean(weights)
-        weights_mean = tf.where(tf.not_equal(weights_mean, 0), weights_mean, 1)
+    with tf.compat.v1.name_scope(name, 'batch_random_agreement', [labels, predictions, weights]):
+        weights_mean = tf.reduce_mean(input_tensor=weights)
+        weights_mean = tf.compat.v1.where(tf.not_equal(weights_mean, 0), weights_mean, 1)
 
-        p_labels = tf.reduce_mean(labels * weights) / weights_mean
-        p_predictions = tf.reduce_mean(predictions * weights) / weights_mean
+        p_labels = tf.reduce_mean(input_tensor=labels * weights) / weights_mean
+        p_predictions = tf.reduce_mean(input_tensor=predictions * weights) / weights_mean
 
         random_agreement = tf.identity(
             p_labels * p_predictions + (1 - p_labels) * (1 - p_predictions),
@@ -237,7 +237,7 @@ def batch_kappa(labels, predictions, weights, name=None):
     kappa: a scalar tensor representing the Kappa measure of agreement
         between labels and predictions.
     """
-    with tf.name_scope(name, 'batch_kappa', [labels, predictions, weights]):
+    with tf.compat.v1.name_scope(name, 'batch_kappa', [labels, predictions, weights]):
         accuracy = batch_accuracy(labels, predictions, weights)
         random_agreement = batch_random_agreement(labels, predictions, weights)
 
@@ -265,7 +265,7 @@ def batch_kappa_oracle(labels, logits, weights, name=None):
     -------
     kappa: a scalar tensor representing the Kappa measure of agreement.
     """
-    with tf.name_scope(name, 'batch_kappa_oracle', [labels, logits, weights]):
+    with tf.compat.v1.name_scope(name, 'batch_kappa_oracle', [labels, logits, weights]):
         predictions = oracle_predictions(labels, logits)
 
         return batch_kappa(labels, predictions, weights)

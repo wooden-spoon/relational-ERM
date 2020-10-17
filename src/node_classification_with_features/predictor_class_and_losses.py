@@ -29,15 +29,15 @@ def make_nn_class_predictor(label_task_weight=0.001, regularization=0., clip=Non
 
     # node classifer logits
     def make_label_logits(embeddings, features, mode, params):
-        regularizer = tf.contrib.layers.l2_regularizer(scale=label_task_weight * regularization)
+        regularizer = tf.keras.regularizers.l2(l=0.5 * (label_task_weight * regularization))
 
         vertex_features = features['vertex_features']
         embedding_and_features = tf.concat([embeddings, vertex_features], axis=-1)
 
         for units in params['hidden_units']:
-            net = tf.layers.dense(embedding_and_features, units=units, activation=tf.nn.relu)
+            net = tf.compat.v1.layers.dense(embedding_and_features, units=units, activation=tf.nn.relu)
 
-        last_layer = tf.layers.dense(
+        last_layer = tf.compat.v1.layers.dense(
             net, params['n_classes'], activation=None, use_bias=True,
             kernel_regularizer=regularizer,
             bias_regularizer=regularizer,
@@ -62,15 +62,15 @@ def make_nn_class_predictor(label_task_weight=0.001, regularization=0., clip=Non
         The softmax cross-entropy loss of the prediction on the label.
         """
         if len(logits.shape) == 3:
-            batch_size = tf.to_float(tf.shape(logits)[0])
+            batch_size = tf.cast(tf.shape(input=logits)[0], dtype=tf.float32)
         else:
             batch_size = 1
 
-        label_pred_losses = tf.losses.sparse_softmax_cross_entropy(
-            classes, logits=logits, weights=split, reduction=tf.losses.Reduction.NONE)
+        label_pred_losses = tf.compat.v1.losses.sparse_softmax_cross_entropy(
+            classes, logits=logits, weights=split, reduction=tf.compat.v1.losses.Reduction.NONE)
 
         # sum rather than (tf default of) mean because ¯\_(ツ)_/¯
-        label_pred_loss = tf.reduce_sum(label_pred_losses)
+        label_pred_loss = tf.reduce_sum(input_tensor=label_pred_losses)
 
         return label_pred_loss / batch_size
 

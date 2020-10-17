@@ -26,15 +26,13 @@ def parallel_dataset(dataset_fn, num_shards, seed):
     -------
     dataset: a dataset pulling in parallel from the given number of shards.
     """
-    from tensorflow.contrib.data import parallel_interleave
-
     if num_shards is None or num_shards == 1:
         return dataset_fn(seed)
 
-    return tf.data.Dataset.range(num_shards).apply(
-        parallel_interleave(
+    return tf.data.Dataset.range(num_shards).interleave(
             lambda s: dataset_fn(seed + s),
-            num_shards, 1, sloppy=True, buffer_output_elements=2))
+            num_shards, 1, num_parallel_calls=tf.data.experimental.AUTOTUNE,
+            deterministic=False)
 
 
 def get_unigram_distribution(num_vertex, dataset_fn, power=0.75):
@@ -53,35 +51,35 @@ def get_unigram_distribution(num_vertex, dataset_fn, power=0.75):
     -------
     logits: the logits for the given distribution.
     """
-    tf.logging.info("Computing unigram distribution from sample.")
+    tf.compat.v1.logging.info("Computing unigram distribution from sample.")
 
     with tf.Graph().as_default():
         dataset = dataset_fn()
         samples = dataset.take(10*num_vertex)
-        sample = samples.make_one_shot_iterator().get_next()
+        sample = tf.compat.v1.data.make_one_shot_iterator(samples).get_next()
 
         if 'walk' in sample:
             sample = sample['walk']
         else:
             sample = sample['vertex_index']
 
-        empirical_unigram = tf.get_variable(
+        empirical_unigram = tf.compat.v1.get_variable(
             'empirical_unigram', shape=[num_vertex], dtype=tf.int32,
-            initializer=tf.zeros_initializer(), trainable=False)
+            initializer=tf.compat.v1.zeros_initializer(), trainable=False)
 
-        increment_empirical = tf.scatter_add(
+        increment_empirical = tf.compat.v1.scatter_add(
             empirical_unigram, sample, tf.ones_like(sample, dtype=tf.int32))
 
-        initializer = tf.global_variables_initializer()
+        initializer = tf.compat.v1.global_variables_initializer()
 
-        with tf.Session() as session:
+        with tf.compat.v1.Session() as session:
             session.run(initializer)
             for _ in range(10*num_vertex):
                 session.run(increment_empirical)
 
             vertex_count_empirical = session.run(empirical_unigram)
 
-    tf.logging.info("Done computing unigram distribution.")
+    tf.compat.v1.logging.info("Done computing unigram distribution.")
     return power*np.log(vertex_count_empirical)
 
 
@@ -125,9 +123,9 @@ def tensorboard_hack(graph_data):
     """
 
     def _constant_hidden_value(value, name):
-        return tf.py_func(
+        return tf.numpy_function(
             lambda: value,
-            [], tf.int32, stateful=False,
+            [], tf.int32,
             name=name)
 
     adjacency_list = graph_data.adjacency_list
@@ -289,7 +287,7 @@ def make_open_ego_dataset(args):
 
         dataset = dataset.map(
             adapters.compose(
-                lambda _: tf.random_uniform([num_vertex_per_sample], 0, num_vertex_graph, dtype=tf.int32, seed=seed),
+                lambda _: tf.random.uniform([num_vertex_per_sample], 0, num_vertex_graph, dtype=tf.int32, seed=seed),
                 lambda centers: {'edge_list': adapter_ops.get_open_ego_network(
                     centers,
                     graph_data.adjacency_list.neighbours,

@@ -11,11 +11,11 @@ from . import metrics
 def _make_label_embeddings(num_labels, params):
     embedding_variable_name = 'label_embeddings'
 
-    embeddings = tf.get_variable(
+    embeddings = tf.compat.v1.get_variable(
         embedding_variable_name,
         shape=[num_labels, params.embedding_dim],
         dtype=tf.float32,
-        initializer=tf.truncated_normal_initializer(stddev=1 / params.embedding_dim),
+        initializer=tf.compat.v1.truncated_normal_initializer(stddev=1 / params.embedding_dim),
         trainable=True)
 
     return embeddings
@@ -31,11 +31,11 @@ def _load_vertex_embeddings(labels, embeddings):
     packed_labels = labels['packed_labels']
     packed_labels_lengths = labels['packed_labels_lengths']
 
-    packed_labels_shape = tf.shape(packed_labels)
-    packed_labels_lengths_shape = tf.shape(packed_labels_lengths)
+    packed_labels_shape = tf.shape(input=packed_labels)
+    packed_labels_lengths_shape = tf.shape(input=packed_labels_lengths)
     packed_labels_flat = tf.reshape(packed_labels, [-1])
 
-    label_embeddings_flat = tf.nn.embedding_lookup(embeddings, packed_labels_flat)
+    label_embeddings_flat = tf.nn.embedding_lookup(params=embeddings, ids=packed_labels_flat)
 
     if len(packed_labels_lengths.shape) > 1:
         segments_flat = tf.reshape(
@@ -43,10 +43,10 @@ def _load_vertex_embeddings(labels, embeddings):
             [-1])
     else:
         segments_flat = array_ops.repeat(
-            tf.range(tf.size(packed_labels_lengths), dtype=tf.int32),
+            tf.range(tf.size(input=packed_labels_lengths), dtype=tf.int32),
             packed_labels_lengths)
 
-    embeddings_flat = tf.segment_sum(
+    embeddings_flat = tf.math.segment_sum(
         label_embeddings_flat, segments_flat)
 
     output_embedding_shape = tf.stack(
@@ -55,11 +55,11 @@ def _load_vertex_embeddings(labels, embeddings):
 
     if len(packed_labels_lengths.shape) > 1:
         expected_num_segments = packed_labels_lengths_shape[0] * (packed_labels_lengths_shape[1] + 1)
-        length_to_pad = expected_num_segments - tf.shape(embeddings_flat)[0]
+        length_to_pad = expected_num_segments - tf.shape(input=embeddings_flat)[0]
 
         embeddings_flat = tf.pad(
-            embeddings_flat,
-            tf.reshape(tf.stack((0, length_to_pad, 0, 0), axis=0), [2, 2]))
+            tensor=embeddings_flat,
+            paddings=tf.reshape(tf.stack((0, length_to_pad, 0, 0), axis=0), [2, 2]))
 
     embeddings = tf.reshape(
         embeddings_flat,
@@ -80,7 +80,7 @@ def compute_edge_logits(embeddings, edge_list):
     -------
     a tensor representing the edge prediction loss.
     """
-    with tf.name_scope('edge_list_logits'):
+    with tf.compat.v1.name_scope('edge_list_logits'):
         pairwise_inner_prods = tf.matmul(embeddings, embeddings, transpose_b=True,
                                          name='all_edges_logit')
 
@@ -91,7 +91,7 @@ def compute_edge_logits(embeddings, edge_list):
         else:
             no_batch = False
 
-        edge_list_shape = tf.shape(edge_list)
+        edge_list_shape = tf.shape(input=edge_list)
         batch_size = edge_list.shape[0].value if edge_list.shape[0].value is not None else edge_list_shape[0]
         num_edges = edge_list.shape[1].value if edge_list.shape[1].value is not None else edge_list_shape[1]
 
@@ -109,9 +109,9 @@ def compute_edge_logits(embeddings, edge_list):
 
 
 def skipgram_loss(edge_logits, edge_list, edge_weights, params):
-    with tf.name_scope('skipgram_loss', values=[edge_logits, edge_list, edge_weights]):
+    with tf.compat.v1.name_scope('skipgram_loss', values=[edge_logits, edge_list, edge_weights]):
         if len(edge_list.shape) == 3:
-            batch_size = tf.to_float(tf.shape(edge_list)[0])
+            batch_size = tf.cast(tf.shape(input=edge_list)[0], dtype=tf.float32)
         else:
             batch_size = 1.
 
@@ -119,7 +119,7 @@ def skipgram_loss(edge_logits, edge_list, edge_weights, params):
 
         # values of -1 in the weights indicate padded edges which should be ignored
         # in loss computation.
-        edge_censored = tf.to_float(tf.not_equal(edge_weights, -1))
+        edge_censored = tf.cast(tf.not_equal(edge_weights, -1), dtype=tf.float32)
 
         edge_pred_loss = tf.nn.sigmoid_cross_entropy_with_logits(
             labels=edge_present, logits=edge_logits)
@@ -130,7 +130,7 @@ def skipgram_loss(edge_logits, edge_list, edge_weights, params):
             edge_pred_loss = tf.clip_by_value(edge_pred_loss, 0, params.clip)
 
         # sum instead of (tf default of) mean because mean screws up learning rates for embeddings
-        loss_value = tf.divide(tf.reduce_sum(edge_pred_loss), batch_size,
+        loss_value = tf.divide(tf.reduce_sum(input_tensor=edge_pred_loss), batch_size,
                                name='skipgram_edge_loss')
     return loss_value
 
@@ -149,18 +149,18 @@ def make_label_clustering(num_labels):
         edge_logits = compute_edge_logits(vertex_embeddings, features['edge_list'])
         edge_loss = skipgram_loss(edge_logits, features['edge_list'], edge_weights, params)
 
-        optimizer = tf.train.GradientDescentOptimizer(0.01)
+        optimizer = tf.compat.v1.train.GradientDescentOptimizer(0.01)
 
         train_op = optimizer.minimize(
-            edge_loss, tf.train.get_or_create_global_step(), var_list=tf.trainable_variables())
+            edge_loss, tf.compat.v1.train.get_or_create_global_step(), var_list=tf.compat.v1.trainable_variables())
 
         predicted_edges = tf.cast(tf.greater(edge_logits, 0.), edge_logits.dtype)
         kappa_batch_edges = metrics.batch_kappa(
             edge_weights, predicted_edges,
-            tf.to_float(tf.not_equal(edge_weights, -1)),  # -1 weight indicates padded edges
+            tf.cast(tf.not_equal(edge_weights, -1), dtype=tf.float32),  # -1 weight indicates padded edges
             name='kappa_edges_in_batch')
 
-        tf.summary.scalar('kappa_batch_edges', kappa_batch_edges)
+        tf.compat.v1.summary.scalar('kappa_batch_edges', kappa_batch_edges)
 
         return tf.estimator.EstimatorSpec(
             mode=mode,

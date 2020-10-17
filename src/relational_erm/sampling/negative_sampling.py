@@ -30,7 +30,7 @@ def make_learned_unigram_logits(num_vertex, power=0.75, prior=None, accumulator_
     if isinstance(prior, numbers.Number):
         prior = np.ones(num_vertex, dtype=accumulator_dtype) * prior
 
-    empirical_vertex_distribution = tf.get_variable(
+    empirical_vertex_distribution = tf.compat.v1.get_variable(
         name='empirical_vertex_distribution',
         dtype=accumulator_dtype,
         initializer=prior,
@@ -38,15 +38,15 @@ def make_learned_unigram_logits(num_vertex, power=0.75, prior=None, accumulator_
         use_resource=True)
 
     def make_logits(edge_list):
-        with tf.name_scope(name, "learned_unigram_distribution", [edge_list]):
+        with tf.compat.v1.name_scope(name, "learned_unigram_distribution", [edge_list]):
             edge_list_flat = tf.reshape(edge_list, [-1])
-            update_empirical = tf.scatter_add(
+            update_empirical = tf.compat.v1.scatter_add(
                 empirical_vertex_distribution,
                 edge_list_flat,
                 tf.ones_like(edge_list_flat))
 
             with tf.control_dependencies([update_empirical]):
-                logits = power * tf.log(tf.to_float(empirical_vertex_distribution))
+                logits = power * tf.math.log(tf.cast(empirical_vertex_distribution, dtype=tf.float32))
         return logits
 
     return make_logits
@@ -79,7 +79,7 @@ def add_negative_sample(num_vertices,
 
     def _sample_independent_vertices(edge_list, num_samples, dtype):
         if vertex_distribution_logit is None:
-            return tf.random_uniform(
+            return tf.random.uniform(
                 tf.reshape(num_samples, [1]),
                 0, num_vertices, seed=seed, dtype=dtype)
 
@@ -88,17 +88,17 @@ def add_negative_sample(num_vertices,
         else:
             unigram_logits = vertex_distribution_logit
 
-        return tf.multinomial(tf.expand_dims(unigram_logits, 0),
-                              num_samples,
+        return tf.random.categorical(logits=tf.expand_dims(unigram_logits, 0),
+                              num_samples=num_samples,
                               seed=seed,
-                              output_dtype=dtype)
+                              dtype=dtype)
 
     def _make_neg_edges_shared(edge_list, neg_edges_shape, dtype):
         """ Creates negative edges where negative vertices are drawn from a fixed pool for
         the sample. This is somewhat more computationally efficient.
         """
         random_vertex_ids = _sample_independent_vertices(edge_list, num_random_total, dtype)
-        neg_edges_end_idx = tf.random_uniform(
+        neg_edges_end_idx = tf.random.uniform(
             neg_edges_shape, 0, num_random_total,
             seed=seed,
             dtype=tf.int32)
@@ -110,7 +110,7 @@ def add_negative_sample(num_vertices,
         """ Creates negative edges where negative vertices are drawn at random from
         all vertices in the graph. This is less computationally efficient.
         """
-        neg_edges_end = _sample_independent_vertices(edge_list, tf.reduce_prod(neg_edges_shape), dtype)
+        neg_edges_end = _sample_independent_vertices(edge_list, tf.reduce_prod(input_tensor=neg_edges_shape), dtype)
         neg_edges_end = tf.reshape(neg_edges_end, neg_edges_shape)
 
         return neg_edges_end
@@ -129,11 +129,11 @@ def add_negative_sample(num_vertices,
             neg_edges_start = tf.tile(vertex_list, [num_samples_per_vertex])
 
         if weights is None:
-            weights = tf.ones(tf.stack([tf.shape(edge_list)[0], 1]))
+            weights = tf.ones(tf.stack([tf.shape(input=edge_list)[0], 1]))
 
-        neg_edges_end = _make_neg_edges_end(edge_list, tf.shape(neg_edges_start), edge_list.dtype)
+        neg_edges_end = _make_neg_edges_end(edge_list, tf.shape(input=neg_edges_start), edge_list.dtype)
         neg_edges = tf.stack([neg_edges_start, neg_edges_end], axis=1)
-        neg_weights = tf.zeros(tf.stack([tf.shape(neg_edges)[0], tf.shape(weights)[1]]))
+        neg_weights = tf.zeros(tf.stack([tf.shape(input=neg_edges)[0], tf.shape(input=weights)[1]]))
 
         all_edges = tf.concat([edge_list, neg_edges], axis=0)
         all_weights = tf.concat([weights, neg_weights], axis=0)

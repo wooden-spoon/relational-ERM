@@ -37,7 +37,7 @@ def load_data_graphsage(data_path=None):
 
     # use tensorflow loading to support loading from
     # cloud providers
-    with tf.gfile.Open(data_path, mode='rb') as f:
+    with tf.io.gfile.GFile(data_path, mode='rb') as f:
         loaded = np.load(f, allow_pickle=False)
 
     # graph attributes

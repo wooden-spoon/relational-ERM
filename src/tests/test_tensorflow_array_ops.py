@@ -1,6 +1,5 @@
 import os
 import numpy as np
-import tensorflow as tf
 
 import relational_erm.tensorflow_ops.array_ops as array_ops
 

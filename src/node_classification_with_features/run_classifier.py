@@ -58,7 +58,7 @@ def main():
         label_task_weight=args.label_task_weight,
         regularization=_adjust_regularization(args.global_regularization, args.batch_size),
         global_optimizer=_make_global_optimizer(args),
-        embedding_optimizer=lambda: tf.train.GradientDescentOptimizer(
+        embedding_optimizer=lambda: tf.compat.v1.train.GradientDescentOptimizer(
             _adjust_learning_rate(args.embedding_learning_rate, args.batch_size))
     )
 
@@ -73,13 +73,13 @@ def main():
     """
     # some extra logging
     hooks = [
-        tf.train.LoggingTensorHook({
+        tf.estimator.LoggingTensorHook({
             'kappa_edges': 'kappa_edges_in_batch/value'},
             every_n_iter=100)
     ]
 
     if args.profile:
-        hooks.append(tf.train.ProfilerHook(save_secs=30))
+        hooks.append(tf.estimator.ProfilerHook(save_secs=30))
 
     if args.debug:
         from tensorflow.python import debug as tfdbg

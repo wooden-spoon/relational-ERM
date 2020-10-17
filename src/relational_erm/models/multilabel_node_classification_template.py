@@ -6,17 +6,17 @@ from . import metrics
 def _make_metrics(labels, predictions, weights):
     assert weights is not None
 
-    accuracy = tf.metrics.accuracy(
+    accuracy = tf.compat.v1.metrics.accuracy(
         labels=labels,
         predictions=predictions,
         weights=tf.expand_dims(weights, -1))
 
-    precision = tf.metrics.precision(
+    precision = tf.compat.v1.metrics.precision(
         labels=labels,
         predictions=predictions,
         weights=tf.expand_dims(weights, -1))
 
-    recall = tf.metrics.recall(
+    recall = tf.compat.v1.metrics.recall(
         labels=labels,
         predictions=predictions,
         weights=tf.expand_dims(weights, -1))
@@ -48,20 +48,20 @@ def _make_dataset_summaries(features, mode):
     if mode != tf.estimator.ModeKeys.TRAIN:
         return
 
-    with tf.variable_scope(None, 'dataset_summaries'):
-        total_count_vertex = tf.get_variable('total_count_vertex', shape=[], dtype=tf.int64,
-                                             initializer=tf.zeros_initializer(), trainable=False)
-        total_count_edges = tf.get_variable('total_count_edges', shape=[], dtype=tf.int64,
-                                            initializer=tf.zeros_initializer(), trainable=False)
+    with tf.compat.v1.variable_scope(None, 'dataset_summaries'):
+        total_count_vertex = tf.compat.v1.get_variable('total_count_vertex', shape=[], dtype=tf.int64,
+                                             initializer=tf.compat.v1.zeros_initializer(), trainable=False)
+        total_count_edges = tf.compat.v1.get_variable('total_count_edges', shape=[], dtype=tf.int64,
+                                            initializer=tf.compat.v1.zeros_initializer(), trainable=False)
 
         update_vertex_count = total_count_vertex.assign_add(
-            tf.shape(features['vertex_index'], out_type=tf.int64)[0])
+            tf.shape(input=features['vertex_index'], out_type=tf.int64)[0])
         update_edge_count = total_count_edges.assign_add(
-            tf.shape(features['edge_list'], out_type=tf.int64)[0])
+            tf.shape(input=features['edge_list'], out_type=tf.int64)[0])
 
         with tf.control_dependencies([update_vertex_count, update_edge_count]):
-            tf.summary.scalar('total_edges', total_count_edges, family='dataset')
-            tf.summary.scalar('total_vertex', total_count_vertex, family='dataset')
+            tf.compat.v1.summary.scalar('total_edges', total_count_edges, family='dataset')
+            tf.compat.v1.summary.scalar('total_vertex', total_count_vertex, family='dataset')
 
 
 def _make_label_prediction_summaries(present_labels, present_pred_labels, split):
@@ -75,8 +75,8 @@ def _make_label_prediction_summaries(present_labels, present_pred_labels, split)
     """
     # split == 1 indicates insample, wherease split == 0 indicates out of sample.
     # split == -1 denotes fake padded values.
-    split_insample = tf.expand_dims(tf.to_float(tf.equal(split, 1)), -1)
-    split_outsample = tf.expand_dims(tf.to_float(tf.equal(split, 0)), -1)
+    split_insample = tf.expand_dims(tf.cast(tf.equal(split, 1), dtype=tf.float32), -1)
+    split_outsample = tf.expand_dims(tf.cast(tf.equal(split, 0), dtype=tf.float32), -1)
 
     accuracy_batch_insample = metrics.batch_accuracy(
         present_labels, present_pred_labels, split_insample,
@@ -93,10 +93,10 @@ def _make_label_prediction_summaries(present_labels, present_pred_labels, split)
         present_labels, present_pred_labels, split_outsample,
         name='kappa_outsample_batch'
     )
-    tf.summary.scalar('accuracy_batch_in', accuracy_batch_insample)
-    tf.summary.scalar('accuracy_batch_out', accuracy_batch_outsample)
-    tf.summary.scalar('kappa_batch_in', kappa_batch_insample)
-    tf.summary.scalar('kappa_batch_out', kappa_batch_outsample)
+    tf.compat.v1.summary.scalar('accuracy_batch_in', accuracy_batch_insample)
+    tf.compat.v1.summary.scalar('accuracy_batch_out', accuracy_batch_outsample)
+    tf.compat.v1.summary.scalar('kappa_batch_in', kappa_batch_insample)
+    tf.compat.v1.summary.scalar('kappa_batch_out', kappa_batch_outsample)
 
 
 def _get_value(value_or_fn):
@@ -124,12 +124,12 @@ def _default_embedding_optimizer():
     # )
 
     # gensim word2vec default learning rate is 0.025
-    return tf.train.GradientDescentOptimizer(learning_rate=0.025)
+    return tf.compat.v1.train.GradientDescentOptimizer(learning_rate=0.025)
 
 
 def _default_global_optimizer():
     # return tf.train.RMSPropOptimizer(learning_rate=5e-4, momentum=0.9)
-    global_step = tf.train.get_or_create_global_step()
+    global_step = tf.compat.v1.train.get_or_create_global_step()
     # learning_rate = tf.train.polynomial_decay(
     #     10.,
     #     global_step,
@@ -140,7 +140,7 @@ def _default_global_optimizer():
     #     name="global_linear_decay"
     # )
     learning_rate = 1.
-    return tf.train.GradientDescentOptimizer(learning_rate)
+    return tf.compat.v1.train.GradientDescentOptimizer(learning_rate)
 
 
 def _make_polyak_averaging(embeddings, features, label_logits, mode, polyak, make_label_logits, params):
@@ -160,9 +160,9 @@ def _make_polyak_averaging(embeddings, features, label_logits, mode, polyak, mak
             return ema_var  # if ema_var else var
 
         # create the running average variable
-        label_ema_op = label_ema.apply(tf.global_variables("label_logits"))
+        label_ema_op = label_ema.apply(tf.compat.v1.global_variables("label_logits"))
         with tf.control_dependencies([label_ema_op]):
-            with tf.variable_scope("label_logits", reuse=True, custom_getter=label_ema_getter):
+            with tf.compat.v1.variable_scope("label_logits", reuse=True, custom_getter=label_ema_getter):
                 label_logits_predict = make_label_logits(embeddings, features, mode, params)
     else:
         # no polyak averaging; default behaviour
@@ -175,14 +175,14 @@ def _make_polyak_averaging(embeddings, features, label_logits, mode, polyak, mak
 def _make_embedding_variable(params):
     embedding_variable_name = 'input_layer/vertex_index_embedding/embedding_weights'
 
-    all_embeddings = tf.get_variable(
+    all_embeddings = tf.compat.v1.get_variable(
         embedding_variable_name,
         shape=[params['num_vertices'], params['embedding_dim']],
         dtype=tf.float32,
-        initializer=tf.truncated_normal_initializer(stddev=1 / params['embedding_dim']),
+        initializer=tf.compat.v1.truncated_normal_initializer(stddev=1 / params['embedding_dim']),
         trainable=params.get('embedding_trainable', True))
     if params.get('embedding_checkpoint', None) is not None:
-        tf.train.init_from_checkpoint(
+        tf.compat.v1.train.init_from_checkpoint(
             params['embedding_checkpoint'],
             {embedding_variable_name: all_embeddings})
     return all_embeddings
@@ -245,12 +245,12 @@ def make_node_classifier(make_label_logits,
         all_embeddings = _make_embedding_variable(params)
 
         vertex_embedding_shape = tf.concat(
-            [tf.shape(vertex_index), [params['embedding_dim']]], axis=0,
+            [tf.shape(input=vertex_index), [params['embedding_dim']]], axis=0,
             name='vertex_embedding_shape')
 
         # We flatten the vertex index prior to extracting embeddings
         # to maintain compatibility with the input columns.
-        embeddings = tf.nn.embedding_lookup(all_embeddings, tf.reshape(vertex_index, [-1]))
+        embeddings = tf.nn.embedding_lookup(params=all_embeddings, ids=tf.reshape(vertex_index, [-1]))
         embeddings = tf.reshape(embeddings, vertex_embedding_shape, name='vertex_embeddings_batch')
 
         # Vertex Label Predictions
@@ -259,9 +259,9 @@ def make_node_classifier(make_label_logits,
 
         if pos_only_labels:
             vert_is_positive = features['is_positive']
-            split = tf.where(tf.equal(vert_is_positive,1), split, -tf.ones_like(split))
+            split = tf.compat.v1.where(tf.equal(vert_is_positive,1), split, -tf.ones_like(split))
 
-        with tf.variable_scope("label_logits"):
+        with tf.compat.v1.variable_scope("label_logits"):
             label_logits = make_label_logits(embeddings, features, mode, params)
 
         # polyak averaging
@@ -279,13 +279,13 @@ def make_node_classifier(make_label_logits,
             return tf.estimator.EstimatorSpec(mode, predictions=predictions)
 
         # label loss
-        with tf.name_scope('label_loss', values=[label_logits, present_labels, split]):
+        with tf.compat.v1.name_scope('label_loss', values=[label_logits, present_labels, split]):
             label_pred_loss = make_label_pred_loss(
                 label_logits, present_labels,
                 tf.maximum(split, 0))  # clip the split, as -1 represents padded values.
 
-            label_pred_size = tf.shape(label_logits)[-1]
-            label_pred_loss_normalized = tf.divide(label_pred_loss, tf.to_float(label_pred_size))
+            label_pred_size = tf.shape(input=label_logits)[-1]
+            label_pred_loss_normalized = tf.divide(label_pred_loss, tf.cast(label_pred_size, dtype=tf.float32))
 
         # label logits and DeepWalk style prediction
         present_logits = label_logits_predict
@@ -295,7 +295,7 @@ def make_node_classifier(make_label_logits,
             # Metrics
             estimator_metrics = {}
 
-            with tf.variable_scope('metrics_insample'):
+            with tf.compat.v1.variable_scope('metrics_insample'):
                 estimator_metrics.update({
                     k + '_insample': v
                     for k, v in _make_metrics(
@@ -304,7 +304,7 @@ def make_node_classifier(make_label_logits,
                         split).items()
                 })
 
-            with tf.variable_scope('metrics_outsample'):
+            with tf.compat.v1.variable_scope('metrics_outsample'):
                 estimator_metrics.update({
                     k + '_outsample': v
                     for k, v in _make_metrics(
@@ -320,30 +320,30 @@ def make_node_classifier(make_label_logits,
         # subgraph structure
         edge_list = features['edge_list']
         weights = features['weights']  # should be {0., 1.}
-        if weights.shape[-1].value == 1:
+        if weights.shape[-1] == 1:
             weights = tf.squeeze(weights, axis=-1)
 
-        n_vert = tf.shape(features['vertex_index'])
+        n_vert = tf.shape(input=features['vertex_index'])
 
         # Edge predictions
         edge_logits = make_edge_logits(embeddings, features, edge_list, weights, params)
 
         # edge loss
-        with tf.name_scope('edge_loss', values=[edge_logits, edge_list, weights]):
+        with tf.compat.v1.name_scope('edge_loss', values=[edge_logits, edge_list, weights]):
             edge_pred_loss = make_edge_pred_loss(edge_logits, n_vert, edge_list, weights, params)
 
-            edge_pred_size = tf.shape(edge_logits)[-1]
-            edge_pred_loss_normalized = tf.divide(edge_pred_loss, tf.to_float(edge_pred_size))
+            edge_pred_size = tf.shape(input=edge_logits)[-1]
+            edge_pred_loss_normalized = tf.divide(edge_pred_loss, tf.cast(edge_pred_size, dtype=tf.float32))
 
-        reg_loss = tf.losses.get_regularization_loss()
+        reg_loss = tf.compat.v1.losses.get_regularization_loss()
 
         loss = label_pred_loss + edge_pred_loss + reg_loss
 
-        tf.summary.scalar('label_loss', label_pred_loss, family='loss')
-        tf.summary.scalar('label_loss_normalized', label_pred_loss_normalized, family='loss')
-        tf.summary.scalar('edge_loss', edge_pred_loss, family='loss')
-        tf.summary.scalar('edge_loss_normalized', edge_pred_loss_normalized, family='loss')
-        tf.summary.scalar('regularization_loss', reg_loss, family='loss')
+        tf.compat.v1.summary.scalar('label_loss', label_pred_loss, family='loss')
+        tf.compat.v1.summary.scalar('label_loss_normalized', label_pred_loss_normalized, family='loss')
+        tf.compat.v1.summary.scalar('edge_loss', edge_pred_loss, family='loss')
+        tf.compat.v1.summary.scalar('edge_loss_normalized', edge_pred_loss_normalized, family='loss')
+        tf.compat.v1.summary.scalar('regularization_loss', reg_loss, family='loss')
 
         # Summaries
         _make_label_prediction_summaries(present_labels, present_pred_labels, split)
@@ -352,11 +352,11 @@ def make_node_classifier(make_label_logits,
         predicted_edges = tf.cast(tf.greater(edge_logits, 0.), edge_logits.dtype)
         kappa_batch_edges = metrics.batch_kappa(
             weights, predicted_edges,
-            tf.to_float(tf.not_equal(weights, -1)),  # -1 weight indicates padded edges
+            tf.cast(tf.not_equal(weights, -1), dtype=tf.float32),  # -1 weight indicates padded edges
             name='kappa_edges_in_batch'
         )
 
-        tf.summary.scalar('kappa_batch_edges', kappa_batch_edges)
+        tf.compat.v1.summary.scalar('kappa_batch_edges', kappa_batch_edges)
 
         # dataset summaries
         _make_dataset_summaries(features, mode)
@@ -365,11 +365,11 @@ def make_node_classifier(make_label_logits,
         if mode == tf.estimator.ModeKeys.TRAIN:
             batch_size = params['batch_size'] if params['batch_size'] is not None else 1
 
-            embedding_vars = [v for v in tf.trainable_variables() if "embedding" in v.name]
-            global_vars = [v for v in tf.trainable_variables() if "embedding" not in v.name]
-            global_step = tf.train.get_or_create_global_step()
+            embedding_vars = [v for v in tf.compat.v1.trainable_variables() if "embedding" in v.name]
+            global_vars = [v for v in tf.compat.v1.trainable_variables() if "embedding" not in v.name]
+            global_step = tf.compat.v1.train.get_or_create_global_step()
 
-            update_global_step = tf.assign_add(global_step, batch_size, name="global_step_update")
+            update_global_step = tf.compat.v1.assign_add(global_step, batch_size, name="global_step_update")
 
             embedding_optimizer_value = _get_value(embedding_optimizer)
             global_optimizer_value = _get_value(global_optimizer)

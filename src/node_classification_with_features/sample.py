@@ -58,7 +58,7 @@ def augment_sample(graph_data, args, dataset_fn=None, num_samples=None):
         if num_samples is not None:
             dataset = dataset.take(num_samples)
 
-        dataset = dataset.prefetch(tf.contrib.data.AUTOTUNE)
+        dataset = dataset.prefetch(tf.data.experimental.AUTOTUNE)
 
         return dataset
 
@@ -102,7 +102,7 @@ def _create_dev_dataset(graph_data):
     input_fn = augment_sample(graph_data, args, dataset_fn)
 
     dataset = input_fn()
-    sampler = dataset.make_one_shot_iterator()
+    sampler = tf.compat.v1.data.make_one_shot_iterator(dataset)
     (features, labels) = sampler.get_next()
 
     edge_list = tf.squeeze(features['edge_list']).numpy()
@@ -126,7 +126,7 @@ def _create_dev_dataset(graph_data):
 
 
 def main():
-    tf.enable_eager_execution()
+    tf.compat.v1.enable_eager_execution()
 
     graph_data = load_data_graphsage('../data/reddit/reddit.npz')
 
@@ -155,5 +155,5 @@ def main():
     input_fn = augment_sample(graph_data, args, sample)
 
     dataset = input_fn()
-    ds_itr = dataset.make_one_shot_iterator()
+    ds_itr = tf.compat.v1.data.make_one_shot_iterator(dataset)
     (features, labels)=ds_itr.get_next()

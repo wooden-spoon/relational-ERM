@@ -27,8 +27,8 @@ def edge_list_to_adj_mat(n_vert, edge_list, weights=None, force_simple=True):
     )
 
     if force_simple:
-        simple_indices = tf.cast(tf.where(tf.not_equal(adj_mat, 0)), dtype=tf.int32)
-        simple_updates = tf.ones(tf.shape(simple_indices)[0], dtype=tf.float32)
+        simple_indices = tf.cast(tf.compat.v1.where(tf.not_equal(adj_mat, 0)), dtype=tf.int32)
+        simple_updates = tf.ones(tf.shape(input=simple_indices)[0], dtype=tf.float32)
         adj_mat = tf.scatter_nd(
             simple_indices,
             simple_updates,
