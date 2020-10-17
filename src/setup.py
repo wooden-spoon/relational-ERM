@@ -28,10 +28,10 @@ class TensorflowExtension(Extension):
                             '/wd4267', '/wd4244', '/permissive-'])
         else:
             _append_to_key(kwargs, 'library_dirs', [tf.sysconfig.get_lib()])
+            _append_to_key(kwargs, 'extra_link_args', tf.sysconfig.get_link_flags())
             _append_to_key(kwargs, 'extra_compile_args',
                            [f for f in tf.sysconfig.get_compile_flags()
-                            if not f.startswith('-I')] +
-                           ['-std=c++11'])
+                            if not f.startswith('-I')])
 
         super().__init__(name, sources, *args, **kwargs)
 
