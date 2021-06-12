@@ -105,7 +105,7 @@ REGISTER_OP("BatchLengthToSegment")
         TF_RETURN_IF_ERROR(c->WithRank(c->input(0), 2, &input_shape));
 
         shape_inference::DimensionHandle num_output_cols;
-        c->MakeDimForScalarInput(0, &num_output_cols);
+        TF_RETURN_IF_ERROR(c->MakeDimForScalarInput(0, &num_output_cols));
 
         c->set_output(0, c->Matrix(c->Dim(input_shape, 0), num_output_cols));
 

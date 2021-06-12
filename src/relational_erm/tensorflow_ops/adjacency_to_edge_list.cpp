@@ -138,7 +138,7 @@ REGISTER_OP("AdjacencyToEdgeList")
         auto num_edges = c->Dim(c->input(0), 0);
 
         if (redundant) {
-            c->Divide(num_edges, 2, true, &num_edges);
+            TF_RETURN_IF_ERROR(c->Divide(num_edges, 2, true, &num_edges));
         }
 
         c->set_output(0, c->Matrix(num_edges, 2));
@@ -334,13 +334,13 @@ REGISTER_OP("AdjacencyToPosNegEdgeList")
         shape_inference::DimensionHandle total_edges;
         shape_inference::DimensionHandle num_edges_neg;
 
-        c->Multiply(num_vertex, num_vertex, &total_edges);
-        c->Subtract(total_edges, num_vertex, &total_edges);
-        c->Subtract(total_edges, num_edges, &num_edges_neg);
+        TF_RETURN_IF_ERROR(c->Multiply(num_vertex, num_vertex, &total_edges));
+        TF_RETURN_IF_ERROR(c->Subtract(total_edges, num_vertex, &total_edges));
+        TF_RETURN_IF_ERROR(c->Subtract(total_edges, num_edges, &num_edges_neg));
 
         if (redundant) {
-            c->Divide(num_edges, 2, true, &num_edges);
-            c->Divide(num_edges_neg, 2, true, &num_edges_neg);
+            TF_RETURN_IF_ERROR(c->Divide(num_edges, 2, true, &num_edges));
+            TF_RETURN_IF_ERROR(c->Divide(num_edges_neg, 2, true, &num_edges_neg));
         }
 
         c->set_output(0, c->Matrix(num_edges, 2));
