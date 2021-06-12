@@ -8,6 +8,7 @@
 #include <tensorflow/core/lib/random/random_distributions.h>
 
 using namespace tensorflow;
+using namespace tensorflow::data;
 
 template<typename InputArray1, typename InputArray2, typename OutputArray, typename IndexType>
 IndexType set_intersection_index(InputArray1 const& input1, IndexType length1,

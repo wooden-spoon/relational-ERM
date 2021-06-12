@@ -10,6 +10,7 @@
 #include <tensorflow/core/util/work_sharder.h>
 
 using namespace tensorflow;
+using namespace tensorflow::data;
 
 template<typename IndexType = int32, typename FloatType = float>
 struct AliasDrawData {

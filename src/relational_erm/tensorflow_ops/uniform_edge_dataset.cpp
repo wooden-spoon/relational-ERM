@@ -7,6 +7,7 @@
 #include <tensorflow/core/lib/random/random_distributions.h>
 
 using namespace tensorflow;
+using namespace tensorflow::data;
 
 
 template<typename Distribution, typename It>

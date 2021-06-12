@@ -6,6 +6,7 @@
 #include <tensorflow/core/lib/random/random_distributions.h>
 
 using namespace tensorflow;
+using namespace tensorflow::data;
 
 
 /*! Uniform random walk dataset. */
